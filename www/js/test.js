@@ -1,0 +1,17 @@
+<svg>
+      <rect
+         y="10.008425"
+         x="252.71272"
+         height="77.315079"
+         width="25.771692"
+         id="rect4561"
+         fill="yellow"/>
+      <rect
+         transform="matrix(0,1,1,0,0,0)"
+         y="226.94102"
+         x="35.780117"
+         height="77.315079"
+         width="25.771692"
+         id="rect4565"
+         fill="yellow"/>
+</svg>
