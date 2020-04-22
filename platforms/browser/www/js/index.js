@@ -6,6 +6,7 @@ var App = {
     },
 
     onDeviceReady: function() {
+        window.plugins.insomnia.keepAwake()
         loadClassificationModel()
         this.createGame();
         
@@ -21,7 +22,7 @@ var App = {
             CameraPreview.takeSnapshot({quality: 30}, function(base64PictureData){
                 imageSrcData = 'data:image/jpeg;base64,' +base64PictureData;
                 image.src = imageSrcData;
-                let canvas=document.getElementById('canvas');
+                let canvas=document.createElement('canvas');
                 let ctx=canvas.getContext("2d");
                 let img=new Image();
                 img.onload=function(){
@@ -38,9 +39,10 @@ var App = {
     
                 classifier.classify(final, (err, results) => {
                     if(err){
-                        reject("error")
+                        return [{"label":"error", "confidence":100}]
                     }
                     else {
+                        console.log(results)
                         resolve(results)
                     }
                 });

@@ -25,16 +25,16 @@ const SetupGame = () =>{
     let div_form =  document.createElement('div')
     div_form.className ='form-div'
 
-    let selectMode = SelectOptions('selectmode', ['Random', 'Routed'], settings)
+    let selectMode = SelectOptions('selectmode', 'Select mode', ['Random', 'Routed'], settings)
     frag.appendChild(selectMode)
-    let selectSize = SelectOptions('selectsize',[6,5,4,3], settings)
+    let selectSize = SelectOptions('selectsize', 'Select number of shapes', [6,5,4,3], settings)
     frag.appendChild(selectSize)
 
-    let selectPlayers = SelectOptions('selectplayers',[1,2,3], settings)
+    let selectPlayers = SelectOptions('selectplayers', 'Select number of players', [1,2,3], settings)
     frag.appendChild(selectPlayers)
 
     let buttonCreate = document.createElement('button')
-    buttonCreate.innerHTML="Create"
+    buttonCreate.innerHTML="Create Game"
     frag.appendChild(buttonCreate)
     form.appendChild(frag)
 
@@ -47,9 +47,17 @@ const SetupGame = () =>{
     return [buttonCreate, settings]
 }
 
-const SelectOptions = (name, values, settings) => {
+const SelectOptions = (name, label, values, settings) => {
     let frag = document.createDocumentFragment()
+
     let div = document.createElement('div')
+    div.className = "select-div"
+
+    let label_tag = document.createElement('label')
+    label_tag.setAttribute('for', name)
+    label_tag.innerHTML = `<h3 class = "form-label">${label}</h3>`
+    
+
     let select = document.createElement('select')
     select.id = name;
     values.forEach(value => {
@@ -60,6 +68,8 @@ const SelectOptions = (name, values, settings) => {
     });
     select.onchange = ({target}) => settings[name]=target.value;
     select.appendChild(frag)
+
+    div.appendChild(label_tag)
     div.appendChild(select)
     return div
 }

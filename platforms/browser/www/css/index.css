@@ -23,11 +23,10 @@ button{
     width:65vw;
     height: 2em;
 }
- button div{
-     width: 95%;
-     height: 95%;
-     border-radius: 5px;
-     background-color: khaki;
+
+ .found-shape{
+    transform: scale(0);
+    transition-duration: 0.4s;
  }
 
  .heading-one{
@@ -42,9 +41,23 @@ button{
     font-size: 1em;
 }
 
+form{
+    text-align: center;
+}
+
 select, input, button{
     margin-top:1em;
     margin-bottom: 1em;
+    border: 2px solid;
+}
+
+select, input{
+    width: 50vw;
+    height: 2em;
+}
+
+button:active{
+    background-color:#9b9b9b;
 }
 
 .label-div, .heading-three{
@@ -66,7 +79,6 @@ select, input, button{
 }
 
 #camera-div{
-    background-color: red;
     height: 35vh;
 }
 
@@ -84,19 +96,21 @@ select, input, button{
 }
 
 #shape-div-random{
-    width: 100%;
+    width: 95%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    border: 2px solid;
+    margin: 0.5em;
 }
 
 .shape{
-    width: 10vh;
-    height:10vh;
-    background-color: lightseagreen;
+    width: 9vh;
+    height: 9vh;
+    border: 2px solid black;
     border-radius: 5px;
-    margin: 0.5em;
+    margin: 0.3em;
 }
 
 #scan-div{
@@ -105,4 +119,30 @@ select, input, button{
 
 #scan-div button{
     margin:0
+}
+
+.image-SVG{
+    max-width: 100%;
+    height: 100%;
+}
+
+.form-label{
+    margin: 0;
+}
+
+.select-div{
+    margin:1em
+}
+
+.wrong-scan{
+    animation-name: shake;
+    animation-duration: 1s;
+}
+
+
+@keyframes shake {
+    0%      {border-color: white;}
+    5%      {border-color: red;}
+    95%      {border-color: red;}
+    100%    {border-color: white;}
 }

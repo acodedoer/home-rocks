@@ -50,8 +50,8 @@ class Game{
         frag.appendChild(div_text)
 
         for(let i = 0; i < this.playernum; i++){
-            let label = document.createElement('h2')
-            label.className = 'heading-three'
+            let label = document.createElement('h3')
+            label.className = 'form-label'
             label.innerText = `Player ${i+1}`
 
             let div_label = document.createElement('div')
@@ -59,23 +59,39 @@ class Game{
             div_label.className ='label-div'
 
             inputs[i] = document.createElement('input');
-            inputs[i].onchange = ({target}) => player[i] = target.value
+            inputs[i].setAttribute('type', 'text')
+            inputs[i].required = true;
+            inputs[i].className = "input-name";
+            inputs[i].onchange = ({target}) => player[i] = target.value //check similar names here
             frag.appendChild(div_label)
             frag.appendChild(inputs[i])
         }
 
-        form.appendChild(frag)
+        
         let next = document.createElement('button')
         next.innerText = 'Next';
+        form.appendChild(frag)
         app.appendChild(form)
         app.appendChild(next)
-        next.onclick = () => {
-            player.forEach((element, index) => {
-                this.players[index] = new Player(element)
-            });
 
-            console.log(this.players)
-            this.playGame()
+        const checkInputs = () =>{
+            let names = document.querySelectorAll('input')
+            let isCompleted = true;
+            names.forEach((el)=>{
+                if(el.value === ""){
+                    isCompleted = false;
+                }
+            })
+            return isCompleted
+        }
+
+        next.onclick = () => {
+            if(checkInputs() === true){
+                player.forEach((element, index) => {
+                    this.players[index] = new Player(element)
+                });
+                this.playGame()
+            }
         }
     }
 
@@ -86,7 +102,7 @@ class Game{
             next.innerText = `${this.players[this.count].name} is ready`;
             let myShapes = new Shapes(this.size);
             let set = myShapes.setShapes()
-            console.log(this.play)
+            console.log(set)
             next.onclick = () => this.play[this.mode](set, this.players[this.count])
             app.appendChild(next)
         }
@@ -118,6 +134,7 @@ class Game{
     playRandom(shapes, player){
         let app = this.clear()
         let count = 0;
+        let found = []
         player.score = 0;
         let [timer, counter] = this.startTimer(shapes.length, player)
         let status = document.createElement('h1')
@@ -138,18 +155,17 @@ class Game{
         shape.className='header-two'
         shape_div.appendChild(shape)
 
-        shapes.forEach((shape,index) => {
+        shapes.forEach((shape) => {
             let div = document.createElement('div')
-            div.id = 'shape-'+index;
+            div.id = 'shape-'+shape.shape;
             div.className ='shape'
-            //div.innerHTML = SVGShapes.shape;
+            div.appendChild(shape.svg)
             shape_div_random.appendChild(div)
         });
         shape_div.appendChild(shape_div_random)
         app.appendChild(shape_div)
 
         let camera = document.createElement('div')
-        camera.innerText="fcgvhbjnkmlknbhjvgcxcgvhbjnkm"
         camera.id = 'camera-div'
         camera.classList.add('flex2')
         app.appendChild(camera)
@@ -158,26 +174,38 @@ class Game{
         scan_div.id ='scan-div';
         let scan = document.createElement('button');
         scan.innerText = "Scan"
-        scan.onclick = () => {
-            console.log(this.classify())
-            player.score += 1;
-            if(count < shapes.length - 1){
-                count += 1
-                status.innerText = `${count} of ${shapes.length}`
+
+        scan.onclick = async ({target}) => {
+            console.log('clicked')
+            target.disabled = true;
+            target.innerText = "Scanning..." 
+            let result = await window.App.classifyImage()
+            if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
+                found.push(result[0].label)
+                let shape_found = document.getElementById(`shape-${result[0].label}`)
+                shape_found.classList.toggle('found-shape');
+                shape_found.addEventListener("transitionend", ()=> {console.log('transition ended');document.getElementById('shape-div-random').removeChild(shape_found)});
+                player.score += 1;
+                if(count < shapes.length - 1){
+                    count += 1
+                    status.innerText = `${count} of ${shapes.length}`
+                }
+                else{
+                    clearInterval(counter)
+                    this.showScore(player)
+                    CameraPreview.hide()
+                }
             }
             else{
-                clearInterval(counter)
-                this.showScore(player)
-                CameraPreview.hide()
+                shape_div_random.classList.add('wrong-scan')
+                const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+                shape_div_random.addEventListener("animationend", onAnimationEnd)
             }
+            target.innerText = "Scan"
+            target.disabled = false;
         }
         scan_div.appendChild(scan)
         app.appendChild(scan_div)
-    }
-
-    async classify(){
-        let labels = await App.classifyImage()
-        return labels;
     }
 
     playRouted(shapes, player){
@@ -202,7 +230,6 @@ class Game{
         app.appendChild(shape_div)
 
         let camera = document.createElement('div')
-        camera.innerText="fcgvhbjnkmlknbhjvgcxcgvhbjnkm"
         camera.id = 'camera-div'
         camera.classList.add('flex2')
         app.appendChild(camera)
@@ -230,6 +257,7 @@ class Game{
     }
 
     showScore(){
+        window.plugins.insomnia.allowSleepAgain()
         let app = this.clear()
         let player = this.players[this.count]
         this.count+=1;
@@ -241,7 +269,7 @@ class Game{
         if(this.count < this.playernum){    
             next.innerText = 'Next Player'
             next.onclick = () => {
-                this.playGame()
+                this.playGame().bind(this)
             }
         }
         else{
@@ -256,6 +284,7 @@ class Game{
     }
 
     gameOver(){
+        window.plugins.insomnia.allowSleepAgain()
         let app = this.clear()
         let player = this.players[this.count]
         this.count+=1;
@@ -321,8 +350,17 @@ class Shapes{
     }
 
     setShapes(){
-        let allShapes = ['square', 'circle', 'heart', 'triangle', 'star', 'diamond']
-        let set = allShapes.slice(0,this.size)
+        let allShapes = ['flowers', 'square', 'triangle', 'diamond', 'pentagon', 'cross']
+        let subset = allShapes.slice(0,this.size)
+        let set = []
+
+        subset.forEach((shape, index) => {
+            let svg = document.createElement('img')
+            svg.src = `img/${shape}.svg`
+            svg.className = 'image-SVG'
+            set.push({shape: shape, svg: svg})
+        });
+
         return set
     }
 }

@@ -6,8 +6,10 @@ var App = {
     },
 
     onDeviceReady: function() {
+        window.plugins.insomnia.keepAwake()
         loadClassificationModel()
         this.createGame();
+
         
     },
     createGame: function(){
@@ -17,7 +19,7 @@ var App = {
     classifyImage:function(){
         let image = new Image()
         let final = new Image()
-        return new Promise(resolve => {
+        return new Promise((resolve, reject) => {
             CameraPreview.takeSnapshot({quality: 30}, function(base64PictureData){
                 imageSrcData = 'data:image/jpeg;base64,' +base64PictureData;
                 image.src = imageSrcData;
@@ -38,10 +40,9 @@ var App = {
     
                 classifier.classify(final, (err, results) => {
                     if(err){
-                        reject("error")
+                        reject(err) 
                     }
                     else {
-                        console.log(results)
                         resolve(results)
                     }
                 });
