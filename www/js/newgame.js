@@ -1,13 +1,27 @@
 const CreateNew = () => {
+    let app = document.querySelector('.app')
+    app.innerHTML = ""
     let [buttonSetupGame, GameSettings] = SetupGame()
     buttonSetupGame.onclick = (e) =>{
         e.preventDefault()
-        game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
+        let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
     }
 }
 
-const SetupGame = () =>{
+const SplashScreen = () => {
+    LoadModel(()=> console.log('Loaded'))
+    let app = document.querySelector('.app')
+    app.innerHTML = ""
+    let title = document.createElement('h1')
+    title.innerText = 'Home Rocks'
+    title.className = 'heading-one'
+    app.appendChild(title)
+    TestModel().then((result)=>{console.log(result)}).then(()=>CreateNew()).catch((err)=>{console.log(err);CreateNew()})
+}
+
+
+const SetupGame = () => {
     let settings = {'selectmode':'Random', 'selectsize':6, 'selectplayers':1}
     let form = document.createElement('form');
     let frag = document.createDocumentFragment();
@@ -39,7 +53,6 @@ const SetupGame = () =>{
     form.appendChild(frag)
 
     div_form.appendChild(form)
-
 
     document.querySelector('.app').appendChild(div_text)
     document.querySelector('.app').appendChild(div_form)

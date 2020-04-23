@@ -2,6 +2,7 @@ class Game{
     constructor(mode, size, playernum, time = 30){
         this.mode = mode;
         this.size = size;
+        this.shapes = Util.setShapes(size)
         this.playernum = playernum;
         this.players = []
         this.count = 0;
@@ -11,6 +12,7 @@ class Game{
 
     startGame(){
         this.showInstructions()
+        console.log(this)
     }
 
     restart(){
@@ -21,12 +23,56 @@ class Game{
 
     showInstructions(){
         let app = this.clear()
-        let para = document.createElement('p');
-        para.innerText = "Simple instructions to follow"
+
+        let heading = document.createElement('h1')
+        heading.className = "heading-two"
+        heading.innerText = "How to Setup the Game"
+        let list_div = document.createElement('div');
+        list_div.className = 'list-div'
+
+        let shapes_div = document.createElement('div')
+        shapes_div.className = "shape-div-instructions"
+
+        this.shapes.forEach(element => {
+            let div = document.createElement('div')
+            div.appendChild(element.svg)
+            div.className ='shape-small'
+            shapes_div.appendChild(div)
+        });
+
+        let list = document.createElement('ol')
+        let inst = []
+        inst[0] = document.createElement('li')
+        let para0 = document.createElement('p')
+        para0.innerText = "Draw each of the following shapes on a plane white sheet of paper (you can also download and print each shape  from the chici website)."
+        inst[0].appendChild(para0)
+        inst[0].appendChild(shapes_div)
+
+        inst[1] = document.createElement('li')
+        let para1 = document.createElement('p')
+        para1.innerText = "Hide each drawn or printed shape in a clever place around the house."
+        inst[1] = document.createElement('li')
+        inst[1].appendChild(para1)
+
+        inst[2] = document.createElement('li')
+        let para2 = document.createElement('p')
+        para2.innerText = "Press continue to enter the names of players. Then have the players take turns in finding and scanning the hidden shapes. The player that scans the most shapes in the least amount of time wins."
+        inst[2] = document.createElement('li')
+        inst[2].appendChild(para2)
+        
+        
+        list.appendChild(inst[0])
+        list.appendChild(inst[1])
+        list.appendChild(inst[2])
+
+        list_div.appendChild(list)
+
         let div = document.createElement('div')
         let next = document.createElement('button')
+        div.className ='div-container'
         next.innerText = 'Next';
-        div.appendChild(para)
+        div.appendChild(heading)
+        div.appendChild(list_div)
         div.appendChild(next)
         app.appendChild(div)
         next.onclick = () => this.createPlayers()
@@ -176,10 +222,9 @@ class Game{
         scan.innerText = "Scan"
 
         scan.onclick = async ({target}) => {
-            console.log('clicked')
             target.disabled = true;
             target.innerText = "Scanning..." 
-            let result = await window.App.classifyImage()
+            window.App.classifyImage().then((result)=>{
             if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
                 found.push(result[0].label)
                 let shape_found = document.getElementById(`shape-${result[0].label}`)
@@ -203,9 +248,18 @@ class Game{
             }
             target.innerText = "Scan"
             target.disabled = false;
-        }
+            CameraPreview.show()
+        }).catch((e)=> {
+            shape_div_random.classList.add('wrong-scan')
+            const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+            shape_div_random.addEventListener("animationend", onAnimationEnd)
+        target.innerText = "Scan"
+            target.disabled = false;
+            console.log(e);
+        })}
         scan_div.appendChild(scan)
         app.appendChild(scan_div)
+
     }
 
     playRouted(shapes, player){
@@ -344,23 +398,29 @@ class Player{
     }
 }
 
-class Shapes{
-    constructor(size){
-        this.size = size;
-    }
-
-    setShapes(){
-        let allShapes = ['flowers', 'square', 'triangle', 'diamond', 'pentagon', 'cross']
-        let subset = allShapes.slice(0,this.size)
+class Util{
+    static setShapes(size){
+        let allShapes = this.shuffleArray(['flowers', 'square', 'triangle', 'diamond', 'pentagon', 'cross'])
+        let subset = allShapes.slice(0, size)
         let set = []
-
         subset.forEach((shape, index) => {
             let svg = document.createElement('img')
             svg.src = `img/${shape}.svg`
             svg.className = 'image-SVG'
             set.push({shape: shape, svg: svg})
         });
-
         return set
+    }
+
+    static shuffleArray(array){
+        let currentIndex = array.length, temporaryValue, randomIndex;
+        while (0 !== currentIndex) {
+            randomIndex = Math.floor(Math.random() * currentIndex);
+            currentIndex -= 1;
+            temporaryValue = array[currentIndex];
+            array[currentIndex] = array[randomIndex];
+            array[randomIndex] = temporaryValue;
+        }
+        return array;
     }
 }

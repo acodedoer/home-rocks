@@ -6,8 +6,8 @@ function setupCamera(){
         height: window.innerHeight/3,
         camera: CameraPreview.CAMERA_DIRECTION.BACK,
         toBack: false,
-        tapPhoto: true,
-        tapFocus: true,
+        tapPhoto: false,
+        tapFocus: false,
         previewDrag: false,
         storeToFile: false,
         disableExifHeaderStripping: false
