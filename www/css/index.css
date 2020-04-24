@@ -33,6 +33,24 @@ button{
     width: 15%;
 }
 
+.rankings-table{
+    border: 2px solid black;
+    text-align: center;
+    border-collapse: collapse;
+}
+td, th{
+    padding: 0.2em;
+    font-size: 1.3em;
+}
+
+th{
+    font-weight: 700;
+}
+
+th, td{
+    border: 2px solid black;
+}
+
 .div-container{
     text-align: center;
     width:95vw;

@@ -5,7 +5,6 @@ var App = {
     },
 
     onDeviceReady: function() {
-        window.plugins.insomnia.keepAwake()
         SplashScreen()
         //CreateNew()
     },

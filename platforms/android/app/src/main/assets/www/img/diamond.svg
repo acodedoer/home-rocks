@@ -15,7 +15,7 @@
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="triangle.svg">
+   sodipodi:docname="diamond.svg">
   <defs
      id="defs2" />
   <sodipodi:namedview
@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5935"
-     inkscape:cx="526.73193"
+     inkscape:cx="199.015"
      inkscape:cy="430.23649"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -45,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -69,8 +69,8 @@
        inkscape:rounded="0"
        inkscape:randomized="0"
        d="M 130.17411,284.54694 8.440834,162.81368 130.1741,41.080406 251.90737,162.81367 Z"
-       inkscape:transform-center-x="2.1889672e-006"
-       transform="matrix(0.76071371,0,0,1.0323972,33.266442,-3.3800554)"
-       inkscape:transform-center-y="1.4154278e-005" />
+       inkscape:transform-center-x="1.5804485e-006"
+       transform="matrix(0.64063475,0,0,0.8694329,48.897613,23.152761)"
+       inkscape:transform-center-y="1.2633389e-005" />
   </g>
 </svg>

@@ -15,7 +15,6 @@ body {
 }
 
 button{
-    border-radius: 5px;
     border: 0;
     font-family: inherit;
     font-size: 2em;
@@ -24,6 +23,38 @@ button{
     height: 2em;
 }
 
+.list-div{
+    text-align: left;
+}
+
+
+.div-inline{
+    display: inline-block;
+    width: 15%;
+}
+
+.rankings-table{
+    border: 2px solid black;
+    text-align: center;
+    border-collapse: collapse;
+}
+td, th{
+    padding: 0.2em;
+    font-size: 1.3em;
+}
+
+th{
+    font-weight: 700;
+}
+
+th, td{
+    border: 2px solid black;
+}
+
+.div-container{
+    text-align: center;
+    width:95vw;
+}
  .found-shape{
     transform: scale(0);
     transition-duration: 0.4s;
@@ -95,7 +126,7 @@ button:active{
     margin: 0;
 }
 
-#shape-div-random{
+#shape-div-random, .shape-div-instructions{
     width: 95%;
     display: flex;
     flex-direction: row;
@@ -109,7 +140,13 @@ button:active{
     width: 9vh;
     height: 9vh;
     border: 2px solid black;
-    border-radius: 5px;
+    margin: 0.3em;
+}
+
+.shape-small{
+    width:4vh;
+    height: 4vh;
+    border: 2px solid black;
     margin: 0.3em;
 }
 

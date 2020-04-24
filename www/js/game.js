@@ -7,7 +7,7 @@ class Game{
         this.players = []
         this.count = 0;
         this.time = time;
-        this.play = {'Random':this.playRandom.bind(this), 'Rounted': this.playRouted.bind(this)}
+        this.play = {'Random':this.playRandom.bind(this), 'Routed': this.playRouted.bind(this)}
     }
 
     startGame(){
@@ -22,7 +22,6 @@ class Game{
 
     showInstructions(){
         let app = this.clear()
-
         let heading = document.createElement('h1')
         heading.className = "heading-two"
         heading.innerText = "How to Setup the Game"
@@ -143,28 +142,34 @@ class Game{
     playGame(){
         if (this.count < this.playernum){
             const app = this.clear()
-            const next = Util.createElement('button', '', '', `${this.players[this.count].name} is ready`)        
+            const div = Util.createElement('div', '', 'div-container')
+            const header = Util.createElement('h2', '', 'heading-two', `Get Ready ${this.players[this.count].name}`)
+            const inst = Util.createElement('p', '', '', 'Find and scan all your target shapes as quickly as possible. You win if you scan more shapes than you opponents in less time.<br/>Press "Start" to begin.')
+            inst.style.textAlign = 'left'
+            Util.appendChildren(div, [header, inst])
+            const next = Util.createElement('button', '', '', `Start`)        
             next.onclick = () => this.play[this.mode](this.shapes, this.players[this.count])
-            app.appendChild(next)
+            Util.appendChildren(app,[div, next])
         }
     }
 
     startTimer(size,player){
         let timer = document.createElement('h2')
         let time = this.time * size;
+        let current = 0
         timer.className = 'heading-two'
         timer.id = 'game-timer'
         timer.innerText = `${time}`;
         
         let count = () =>{
-            if(time>0){
-                time-=1;
-                timer.innerText = `${time}`;
+            if(current<time){
+                current+=1;
+                timer.innerText = `${current}`;
             }
             else{
                 clearInterval(counter)
-                CameraPreview.hide()
-                this.gameOver(player.score)
+                player.time = current;
+                this.showScore(player.score)
             }
         }
 
@@ -172,54 +177,55 @@ class Game{
         return [timer, counter]
     }
 
+    setStatus(length, player){
+        const [timer, counter] = this.startTimer(length, player)
+        const status = Util.createElement('h1', 'game-status', 'heaing-two',`0 of ${length}`)
+        return[[timer, counter], status]  
+    }
+
+    getGameElements(heading = "Shapes to scan"){
+        const shape_div = Util.createElement('div', 'shape-div')
+        const shape_div_random = Util.createElement('div', 'shape-div-random')
+        shape_div.appendChild(Util.createElement('h2', '', 'heading-two', heading))
+        const camera = Util.createElement('div', 'camera-div','flex2')
+        const scan_div = Util.createElement('div', 'scan-div')
+        const scan = Util.createElement('button', '', '', "Scan")
+        scan_div.appendChild(scan)
+        return [shape_div, shape_div_random, camera, scan_div, scan]
+    }
+
+    addShapes(shapes, parent_div){
+        shapes.forEach((shape) => {
+            const div = Util.createElement('div', 'shape-'+shape.shape, 'shape')
+            div.appendChild(shape.svg)
+            parent_div.appendChild(div)
+        });
+    }
+
     playRandom(shapes, player){
-        let app = this.clear()
+        window.plugins.insomnia.keepAwake()
+        const app = this.clear()
         let count = 0;
         let found = []
         player.score = 0;
-        let [timer, counter] = this.startTimer(shapes.length, player)
-        let status = document.createElement('h1')
-        status.className = 'header-two'
-        status.id = 'game-status'
-        status.innerText = `0 of ${shapes.length}`
+        const [[timer, counter], status] = this.setStatus(shapes.length, player)
+        const [shape_div, shape_div_random, camera, scan_div, scan] = this.getGameElements()
         setupCamera();
+
         app.appendChild(status)
         app.appendChild(timer)
 
-        let shape_div = document.createElement('div')
-        let shape_div_random = document.createElement('div')
-        shape_div_random.id = 'shape-div-random'
-        shape_div.id ='shape-div';
-
-        let shape = document.createElement('h2');
-        shape.innerText = `Shapes to scan`;
-        shape.className='header-two'
-        shape_div.appendChild(shape)
-
-        shapes.forEach((shape) => {
-            let div = document.createElement('div')
-            div.id = 'shape-'+shape.shape;
-            div.className ='shape'
-            div.appendChild(shape.svg)
-            shape_div_random.appendChild(div)
-        });
+        
+        this.addShapes(shapes, shape_div_random)
         shape_div.appendChild(shape_div_random)
+
         app.appendChild(shape_div)
-
-        let camera = document.createElement('div')
-        camera.id = 'camera-div'
-        camera.classList.add('flex2')
         app.appendChild(camera)
-
-        let scan_div = document.createElement('div')
-        scan_div.id ='scan-div';
-        let scan = document.createElement('button');
-        scan.innerText = "Scan"
 
         scan.onclick = async ({target}) => {
             target.disabled = true;
             target.innerText = "Scanning..." 
-            window.App.ClassifyImage().then((result)=>{
+            ClassifyImage().then((result)=>{
             if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
                 found.push(result[0].label)
                 let shape_found = document.getElementById(`shape-${result[0].label}`)
@@ -232,8 +238,8 @@ class Game{
                 }
                 else{
                     clearInterval(counter)
+                    player.time = timer.innerText
                     this.showScore(player)
-                    CameraPreview.hide()
                 }
             }
             else{
@@ -243,7 +249,6 @@ class Game{
             }
             target.innerText = "Scan"
             target.disabled = false;
-            CameraPreview.show()
         }).catch((e)=> {
             shape_div_random.classList.add('wrong-scan')
             const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
@@ -252,56 +257,68 @@ class Game{
             target.disabled = false;
             console.log(e);
         })}
-        scan_div.appendChild(scan)
+
         app.appendChild(scan_div)
 
     }
 
     playRouted(shapes, player){
-        let app = this.clear()
+        window.plugins.insomnia.keepAwake()
+        const app = this.clear()
         let count = 0;
         player.score = 0;
-        let [timer, counter] = this.startTimer(shapes.length, player)
-        let status = document.createElement('h1')
-        status.className = 'header-two'
-        status.id = 'game-status'
-        status.innerText = `1 of ${shapes.length}`
+        const [[timer, counter], status] = this.setStatus(shapes.length, player)
+        const [shape_div, shape_div_random, camera, scan_div, scan] = this.getGameElements("Next shape")
         setupCamera();
+
+        this.addShapes([shapes[count]], shape_div_random)
+        shape_div.appendChild(shape_div_random)
+
         app.appendChild(status)
         app.appendChild(timer)
-
-        let shape_div = document.createElement('div')
-        shape_div.id ='shape-div';
-        let shape = document.createElement('h2');
-        shape.innerText = `Your target is a ${shapes[0]}`;
-        shape.className='header-two'
-        shape_div.appendChild(shape)
         app.appendChild(shape_div)
-
-        let camera = document.createElement('div')
-        camera.id = 'camera-div'
-        camera.classList.add('flex2')
         app.appendChild(camera)
 
-        let scan_div = document.createElement('div')
-        scan_div.id ='scan-div';
-        let scan = document.createElement('button');
-        scan.innerText = "Scan"
-        scan.onclick = () => {
-            player.score += 1;
-            
-            if(count < shapes.length - 1){
-                count += 1
-                status.innerText = `${count + 1} of ${shapes.length}`
-                shape.innerText = `Your target is a ${shapes[count]}`;
+        scan.onclick = async ({target}) => {
+            target.disabled = true;
+            target.innerText = "Scanning..." 
+            ClassifyImage().then((result)=>{
+            console.log('Shape: ', shapes[count].shape)
+            console.log('Scan: ',result[0].label )
+            if(shapes[count].shape == result[0].label){
+                console.log('Correct Scan')
+                const shape_found = document.getElementById(`shape-${result[0].label}`)
+                shape_found.classList.toggle('found-shape');
+                shape_found.addEventListener("transitionend", ()=> {document.getElementById('shape-div-random').removeChild(shape_found);                if(count < shapes.length - 1){
+                    if(count < shapes.length - 1){
+                        count += 1
+                        this.addShapes([shapes[count]], shape_div_random)
+                        status.innerText = `${count} of ${shapes.length}`}
+                }});
+                player.score += 1;
+                if(count >= shapes.length - 1){
+                    clearInterval(counter)
+                    player.time = timer.innerText
+                    this.showScore(player)
+                }
             }
             else{
-                clearInterval(counter)
-                this.showScore(player)
-                CameraPreview.hide()
+                console.log('Wrong Scan')
+                shape_div_random.classList.add('wrong-scan')
+                const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+                shape_div_random.addEventListener("animationend", onAnimationEnd)
             }
-        }
-        scan_div.appendChild(scan)
+            target.innerText = "Scan"
+            target.disabled = false;
+        }).catch((e)=> {
+            shape_div_random.classList.add('wrong-scan')
+            const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+            shape_div_random.addEventListener("animationend", onAnimationEnd)
+            target.innerText = "Scan"
+            target.disabled = false;
+            console.log(e);
+        })}
+  
         app.appendChild(scan_div)
     }
 
@@ -311,35 +328,8 @@ class Game{
         let player = this.players[this.count]
         this.count+=1;
 
-        let para = document.createElement('p')
-        para.innerText = `${player.name} scanned ${player.score} shapes`
-
-        let next = document.createElement('button')
-        if(this.count < this.playernum){    
-            next.innerText = 'Next Player'
-            next.onclick = () => {
-                this.playGame().bind(this)
-            }
-        }
-        else{
-            next.innerText = 'Standings'
-            next.onclick = () => {
-                this.showStandings()
-            }
-        }
-
-        app.appendChild(para)
-        app.appendChild(next) 
-    }
-
-    gameOver(){
-        window.plugins.insomnia.allowSleepAgain()
-        let app = this.clear()
-        let player = this.players[this.count]
-        this.count+=1;
-
-        let para = document.createElement('p')
-        para.innerText = `${player.name} scanned ${player.score} out of ${this.size} shapes`
+        const header = Util.createElement('h1', '', 'heading-two', `${player.name}'s Score`)
+        const para = Util.createElement('p', '', '', `You found ${player.score} out of ${this.size} shapes in ${player.time} seconds`)
 
         let next = document.createElement('button')
         if(this.count < this.playernum){    
@@ -350,33 +340,46 @@ class Game{
             }
         }
         else{
-            next.innerText = 'Standings'
+            next.innerText = 'Rankings'
             next.onclick = () => {
-                this.showStandings()
+                this.showRankings()
             }
         }
-        app.appendChild(para)
-        app.appendChild(next) 
+
+        Util.appendChildren(app, [header,para,next])
     }
 
-    showStandings(){
-        let app = this.clear()
+    showRankings(){
+        const app = this.clear()
+        const heading = Util.createElement('h1', '', 'heading-two', 'Player Rankings')
+        const rankings = Util.createElement('table', '', 'rankings-table', '<tr><th>Player</th><th>Score</th><th>Time</th></tr>');
+        const rankedPlayers = Util.rankPlayers(this.players,this.size*this.time)
+        rankedPlayers.forEach(player=>{
+            const tr = document.createElement('tr')
+            const tdname = Util.createElement('td', '', '', player.name)
+            const tdscore = Util.createElement('td', '', '', player.score)
+            const tdtime = Util.createElement('td', '', '', player.time)
+            Util.appendChildren(tr, [tdname, tdscore, tdtime])
+            rankings.appendChild(tr)
+        })
 
-        let replay = document.createElement('button')
-        replay.innerText = 'Replay Game'
+        const winner = Util.createElement('h2', '','heading-two', `${rankedPlayers[0].name} Won!!!`)
+        const winner_div = Util.createElement('div', '', 'winner-div')
+        winner_div.appendChild(winner)
+
+        const replay = Util.createElement('button', '', '','Replay Game')
         replay.onclick = () => {this.restart();}
 
-        let newgame = document.createElement('button')
-        newgame.innerText = 'Create New'
-        newgame.onclick = () => {this.clear(); window.App.createGame()}
+        const newgame = Util.createElement('button', '', '','Create New')
+        newgame.onclick = () => {this.clear(); CreateNew()}
 
-        app.appendChild(replay)
-        app.appendChild(newgame)
+        Util.appendChildren(app, [heading, rankings, winner_div,replay, newgame])
     }
 
     clear(){
         let app = document.querySelector('.app');
         app.innerHTML = ""
+        CameraPreview.hide()
         return app;
     }
 }

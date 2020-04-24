@@ -17,7 +17,21 @@
    inkscape:version="0.92.1 r15371"
    sodipodi:docname="triangle.svg">
   <defs
-     id="defs2" />
+     id="defs2">
+    <clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath4487">
+      <rect
+         y="113.23527"
+         x="-14.883694"
+         height="232.7085"
+         width="232.7085"
+         id="rect4489"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.33546329;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+         transform="rotate(-45)"
+         clip-path="none" />
+    </clipPath>
+  </defs>
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -26,7 +40,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.5935"
-     inkscape:cx="526.73193"
+     inkscape:cx="186.3781"
      inkscape:cy="637.55871"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
@@ -45,7 +59,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -54,23 +68,14 @@
      inkscape:groupmode="layer"
      id="layer1"
      transform="translate(0,-32.41666)">
-    <path
-       sodipodi:type="star"
-       style="opacity:1;fill:#000000;fill-opacity:0.98054474;stroke:none;stroke-width:1.39509988;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="path4500"
-       sodipodi:sides="3"
-       sodipodi:cx="130.9902"
-       sodipodi:cy="112.34234"
-       sodipodi:r1="146.62219"
-       sodipodi:r2="73.311096"
-       sodipodi:arg1="1.5707963"
-       sodipodi:arg2="2.6179939"
-       inkscape:flatsided="true"
-       inkscape:rounded="0"
-       inkscape:randomized="0"
-       d="M 130.99021,258.96453 4.0116585,39.031246 l 253.9570915,-7e-6 z"
-       inkscape:transform-center-x="-3.9271293e-006"
-       inkscape:transform-center-y="-41.633674"
-       transform="matrix(0.98946747,0,0,-1.1358081,2.681123,333.94133)" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="rect4483"
+       width="139.53593"
+       height="139.53593"
+       x="69.545067"
+       y="90.593788"
+       clip-path="url(#clipPath4487)"
+       transform="matrix(-1.5175719,0,0,-1.5175719,343.70921,408.06882)" />
   </g>
 </svg>
