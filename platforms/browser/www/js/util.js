@@ -42,4 +42,84 @@ class Util{
         app.innerHTML = ""
         return app
     }
+    
+    static separatePlayers(players, maxtime){
+	    let a = []
+        let b = []
+  
+        players.forEach(player=>{
+            if(player.time == maxtime){
+                b.push(player)
+            }
+            else{
+            a.push(player)
+            }
+        })
+        return[a,b]
+    }
+
+    static rankScore( a, b ) {
+        if ( a.score > b.score ){
+            return -1;
+        }
+        if ( a.score < b.score ){
+            return 1;
+        }
+        return 0;
+    }
+
+    static rankTime( a, b ) {
+        if ( a.time < b.time ){
+            return -1;
+        }
+        if ( a.time > b.time ){
+            return 1;
+        }
+        return 0;
+    }
+
+    static rankPlayers(players, maxtime){
+        let[a,b] = this.separatePlayers(players)
+        a.sort(this.rankTime, maxtime)
+        b.sort(this.rankScore)
+        let c = []
+        c.push(...a)
+        c.push(...b)
+        return c
+    }
+
+    static showMessage(msg, func="", element = false){
+        const app = document.querySelector('.app');
+        const modal = this.createElement('div','', 'modal')
+        const content = this.createElement('div', '', 'modal-content')
+        const close = this.createElement('span', '', 'close', '&times')
+        let message;
+        if(element == false){
+         message = this.createElement('p', '', 'modal-message', msg)
+        }
+        else{
+            message = msg;
+        }
+        this.appendChildren(content, [close,message])
+        modal.appendChild(content)
+        app.appendChild(modal)
+        
+
+        close.onclick = ()=> {
+            if (func != "")
+            func()
+            else app.removeChild(modal)
+        }
+
+        if(element == true){
+            window.onclick = function(event) {
+                const img = document.querySelector('.shape-small')
+                if (event.target.className == 'image-SVG') {
+                    console.log(2)
+                    img.style.border = "2px solid gray"
+                    func()
+                }
+            }
+        }
+    }
 }

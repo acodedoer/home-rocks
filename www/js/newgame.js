@@ -17,7 +17,7 @@ const SplashScreen = () => {
 
 const SetupGame = () => {
     const app = Util.clear()
-    const settings = {'selectmode':'Random', 'selectsize':6, 'selectplayers':1}
+    const settings = {'selectmode':'Random', 'selectsize':6, 'selectplayers':2}
     const form = document.createElement('form');
     const heading = Util.createElement('h1', '', 'heading-two', 'Choose Game Settings')
     const div_text = Util.createElement('div', '', 'heading-div')
@@ -25,7 +25,7 @@ const SetupGame = () => {
     const div_form =  Util.createElement('div', '', 'form-div')
     const selectMode = SelectOptions('selectmode', 'Select mode', ['Random', 'Routed'], settings)
     const selectSize = SelectOptions('selectsize', 'Select number of shapes', [6,5,4,3], settings)
-    const selectPlayers = SelectOptions('selectplayers', 'Select number of players', [1,2,3], settings)
+    const selectPlayers = SelectOptions('selectplayers', 'Select number of players', [2,3,4], settings)
     const buttonCreate = Util.createElement('button','', "","Create Game")
     const frag = document.createDocumentFragment();
     Util.appendChildren(frag, [div_text, selectMode, selectSize, selectPlayers, buttonCreate])   
