@@ -116,6 +116,7 @@ class Util{
         if(element == true){
             window.onclick = function(event) {
                 const img = document.querySelector('.shape-small')
+                console.log(event.target)
                 if (event.target.className == 'image-SVG') {
                     console.log(2)
                     img.style.border = "2px solid gray"

@@ -8,11 +8,19 @@ const CreateNew = () => {
 }
 
 const SplashScreen = () => {
-    LoadModel(()=> console.log('Model loaded'))
-    const app = Util.clear()
-    const title = Util.createElement('h1', '', 'heading-one', 'Home Rocks')
-    app.appendChild(title)
-    TestModel().then((result)=>{console.log(result)}).then(()=>CreateNew()).catch((err)=>{console.log(err);CreateNew()})
+    const MODEL = "https://teachablemachine.withgoogle.com/models/fYluH55oQ/" + "model.json";
+    ml5.imageClassifier(MODEL).then(result => 
+    {
+        classifier = result
+        const app = Util.clear()
+        const title = Util.createElement('h1', '', 'heading-one', 'Home Rocks')
+        app.appendChild(title)
+        TestModel().then((result)=>{console.log(result)}).then(()=>CreateNew()).catch((err)=>{console.log(err);CreateNew()})
+    })
+    .catch(err => {
+        Util.showMessage('Make sure you have a working internet connection', SplashScreen, false)
+    })
+    
 }
 
 const SetupGame = () => {

@@ -116,10 +116,12 @@ class Util{
         if(element == true){
             window.onclick = function(event) {
                 const img = document.querySelector('.shape-small')
-                if (event.target.className == 'image-SVG') {
+                if (event.target.className == 'shape-small') {
                     console.log(2)
                     img.style.border = "2px solid gray"
+                    if (func != "")
                     func()
+                    else app.removeChild(modal)
                 }
             }
         }

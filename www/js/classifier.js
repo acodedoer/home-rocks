@@ -1,7 +1,4 @@
-const LoadModel = (callback) => {
-    const MODEL = "https://teachablemachine.withgoogle.com/models/fYluH55oQ/" + "model.json";
-    classifier = ml5.imageClassifier(MODEL, callback);
-}
+var classifier
 
 const TestModel = () => {
     let image = new Image()

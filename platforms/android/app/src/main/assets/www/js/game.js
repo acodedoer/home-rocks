@@ -362,12 +362,14 @@ class Game{
         if(this.count < this.playernum){    
             next.innerText = 'Next Player'
             next.onclick = () => {
+                document.removeEventListener("resume", onResume, false);
                 this.playGame()
             }
         }
         else{
             next.innerText = 'Rankings'
             next.onclick = () => {
+                document.removeEventListener("resume", onResume, false);
                 this.showRankings()
             }
         }
@@ -382,7 +384,7 @@ class Game{
                 faces.appendChild(btn)
             }
             Util.appendChildren(rate,[msg,faces])
-            Util.showMessage(rate, '', true )
+            Util.showMessage(rate, '', true)
         }
     }
 
