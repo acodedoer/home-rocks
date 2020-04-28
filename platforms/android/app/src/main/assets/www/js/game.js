@@ -85,7 +85,7 @@ class Game{
 
         let text = document.createElement('h1')
         text.className = 'heading-two'
-        text.innerText = "Name Player(s)"
+        text.innerText = "Name Player"
 
         let div_text = document.createElement('div')
         div_text.appendChild(text)
@@ -119,14 +119,19 @@ class Game{
         app.appendChild(next)
 
         const checkInputs = () =>{
-            let names = document.querySelectorAll('input')
+            const names = document.querySelectorAll('input')
             let isCompleted = true;
+            let isUnique = true;
+            const inputs = []
             names.forEach((el)=>{
+                inputs.push(el.value)
                 if(el.value === ""){
                     isCompleted = false;
                 }
             })
-            return isCompleted
+            const unique = [...new Set(inputs)]
+            unique.length === inputs.length ? isUnique = true: isUnique = false
+            return (isCompleted && isUnique)
         }
 
         next.onclick = () => {
@@ -135,6 +140,9 @@ class Game{
                     this.players[index] = new Player(element)
                 });
                 this.playGame()
+            }
+            else{
+                Util.showMessage('Please provide a unique name for each player')
             }
         }
     }
@@ -148,7 +156,22 @@ class Game{
             inst.style.textAlign = 'left'
             Util.appendChildren(div, [header, inst])
             const next = Util.createElement('button', '', '', `Start`)        
-            next.onclick = () => this.play[this.mode](this.shapes, this.players[this.count])
+            next.onclick = () => {
+                if(App.utilobj.firstgame == true){
+                const rate = Util.createElement('div', '', '')
+                const msg = Util.createElement('p', '', 'p-rate', 'How much fun do you think this game will be?')
+                const faces = Util.createElement('div', '', 'shape-div-instructions')
+                for(let i = 1; i<6; i++){
+                    const btn = Util.createElement('div', '', 'shape-small', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                    faces.appendChild(btn)
+                }
+                Util.appendChildren(rate,[msg,faces])
+                Util.showMessage(rate, () => this.play[this.mode](this.shapes, this.players[this.count]), true )
+            }
+            else{
+                this.play[this.mode](this.shapes, this.players[this.count])
+            }
+            }
             Util.appendChildren(app,[div, next])
         }
     }
@@ -159,7 +182,7 @@ class Game{
         let current = 0
         timer.className = 'heading-two'
         timer.id = 'game-timer'
-        timer.innerText = `${time}`;
+        timer.innerText = `${current}`;
         
         let count = () =>{
             if(current<time){
@@ -324,6 +347,10 @@ class Game{
 
     showScore(){
         window.plugins.insomnia.allowSleepAgain()
+        document.addEventListener("resume", onResume, false);
+        function onResume() {
+            CameraPreview.hide()
+        }
         let app = this.clear()
         let player = this.players[this.count]
         this.count+=1;
@@ -335,7 +362,6 @@ class Game{
         if(this.count < this.playernum){    
             next.innerText = 'Next Player'
             next.onclick = () => {
-                
                 this.playGame()
             }
         }
@@ -347,6 +373,17 @@ class Game{
         }
 
         Util.appendChildren(app, [header,para,next])
+        if(App.utilobj.firstgame == true){
+            const rate = Util.createElement('div', '', '')
+            const msg = Util.createElement('p', '', 'p-rate', 'How much fun was the game?')
+            const faces = Util.createElement('div', '', 'shape-div-instructions')
+            for(let i = 1; i<6; i++){
+                const btn = Util.createElement('div', '', 'shape-small', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                faces.appendChild(btn)
+            }
+            Util.appendChildren(rate,[msg,faces])
+            Util.showMessage(rate, '', true )
+        }
     }
 
     showRankings(){
@@ -374,6 +411,7 @@ class Game{
         newgame.onclick = () => {this.clear(); CreateNew()}
 
         Util.appendChildren(app, [heading, rankings, winner_div,replay, newgame])
+        App.utilobj.firstgame = false;
     }
 
     clear(){

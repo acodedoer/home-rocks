@@ -87,4 +87,41 @@ class Util{
         c.push(...b)
         return c
     }
+
+    static showMessage(msg, func="", element = false){
+        const app = document.querySelector('.app');
+        const modal = this.createElement('div','', 'modal')
+        const content = this.createElement('div', '', 'modal-content')
+        const close = this.createElement('span', '', 'close', '&times')
+        let message;
+
+        if(element == false){
+         message = this.createElement('p', '', 'modal-message', msg)
+        }
+        else{
+            message = msg;
+        }
+        
+        this.appendChildren(content, [close,message])
+        modal.appendChild(content)
+        app.appendChild(modal)
+        
+
+        close.onclick = ()=> {
+            if (func != "")
+            func()
+            else app.removeChild(modal)
+        }
+
+        if(element == true){
+            window.onclick = function(event) {
+                const img = document.querySelector('.shape-small')
+                if (event.target.className == 'image-SVG') {
+                    console.log(2)
+                    img.style.border = "2px solid gray"
+                    func()
+                }
+            }
+        }
+    }
 }

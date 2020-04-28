@@ -94,12 +94,14 @@ class Util{
         const content = this.createElement('div', '', 'modal-content')
         const close = this.createElement('span', '', 'close', '&times')
         let message;
+
         if(element == false){
          message = this.createElement('p', '', 'modal-message', msg)
         }
         else{
             message = msg;
         }
+        
         this.appendChildren(content, [close,message])
         modal.appendChild(content)
         app.appendChild(modal)
