@@ -114,16 +114,13 @@ class Util{
         }
 
         if(element == true){
-            window.onclick = function(event) {
-                const img = document.querySelector('.shape-small')
-                if (event.target.className == 'shape-small') {
-                    console.log(2)
-                    img.style.border = "2px solid gray"
-                    if (func != "")
-                    func()
-                    else app.removeChild(modal)
-                }
+                const buttons = document.querySelectorAll('.smiley-button')
+                buttons.forEach(btn=>{
+                    btn.onclick = ()=> {console.log('clicked');func != ""?func():app.removeChild(modal)}
+                    
+                })
             }
-        }
+            
+        
     }
 }

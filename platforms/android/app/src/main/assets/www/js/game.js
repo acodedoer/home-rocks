@@ -22,6 +22,9 @@ class Game{
 
     showInstructions(){
         let app = this.clear()
+        const back = Util.createElement('button', 'back-button','','Back')
+        back.onclick  = () => CreateNew()
+
         let heading = document.createElement('h1')
         heading.className = "heading-two"
         heading.innerText = "How to Setup the Game"
@@ -59,25 +62,22 @@ class Game{
         inst[2].appendChild(para2)
         
         
-        list.appendChild(inst[0])
-        list.appendChild(inst[1])
-        list.appendChild(inst[2])
-
+        Util.appendChildren(list, [inst[0], inst[1], inst[2]])
         list_div.appendChild(list)
 
         let div = document.createElement('div')
         let next = document.createElement('button')
         div.className ='div-container'
         next.innerText = 'Next';
-        div.appendChild(heading)
-        div.appendChild(list_div)
-        div.appendChild(next)
-        app.appendChild(div)
+        Util.appendChildren(div, [heading, list_div, next])
+        Util.appendChildren(app, [div, back])
         next.onclick = () => this.createPlayers()
     }
 
     createPlayers(){
         let app = this.clear()
+        const back = Util.createElement('button', 'back-button','','Back')
+        back.onclick = () => this.showInstructions()
         let player = []
         let inputs = []
         let form = document.createElement('form')
@@ -115,8 +115,7 @@ class Game{
         let next = document.createElement('button')
         next.innerText = 'Next';
         form.appendChild(frag)
-        app.appendChild(form)
-        app.appendChild(next)
+        Util.appendChildren(app, [back, form, next])
 
         const checkInputs = () =>{
             const names = document.querySelectorAll('input')
@@ -162,7 +161,7 @@ class Game{
                 const msg = Util.createElement('p', '', 'p-rate', 'How much fun do you think this game will be?')
                 const faces = Util.createElement('div', '', 'shape-div-instructions')
                 for(let i = 1; i<6; i++){
-                    const btn = Util.createElement('div', '', 'shape-small', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                    const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
                     faces.appendChild(btn)
                 }
                 Util.appendChildren(rate,[msg,faces])
@@ -245,7 +244,7 @@ class Game{
         app.appendChild(shape_div)
         app.appendChild(camera)
 
-        scan.onclick = async ({target}) => {
+        scan.onclick = ({target}) => {
             target.disabled = true;
             target.innerText = "Scanning..." 
             ClassifyImage().then((result)=>{
@@ -302,7 +301,7 @@ class Game{
         app.appendChild(shape_div)
         app.appendChild(camera)
 
-        scan.onclick = async ({target}) => {
+        scan.onclick = ({target}) => {
             target.disabled = true;
             target.innerText = "Scanning..." 
             ClassifyImage().then((result)=>{
@@ -380,7 +379,7 @@ class Game{
             const msg = Util.createElement('p', '', 'p-rate', 'How much fun was the game?')
             const faces = Util.createElement('div', '', 'shape-div-instructions')
             for(let i = 1; i<6; i++){
-                const btn = Util.createElement('div', '', 'shape-small', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
                 faces.appendChild(btn)
             }
             Util.appendChildren(rate,[msg,faces])
