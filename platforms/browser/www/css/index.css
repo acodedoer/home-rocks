@@ -1,9 +1,13 @@
-body {
+@font-face {
+    font-family: "my-font";
+    src: url("../assets/font.TTF"); 
+  }
+  body {
     height:100vh;
     margin:0px;
     padding: 0px;
     width:100%;
-    font-family: 'Neucha', cursive;
+    font-family: 'my-font';
 }
 
 .app{
@@ -12,6 +16,26 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+}
+
+#absolute-header{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    top:0;
+}
+
+#absolute-next{
+    position: absolute;
+    bottom: 1em;
+    right: 1em;
+    width:3em;
+}
+
+#btn-routed p, #btn-random p{
+    margin:0
 }
 
 button{
@@ -51,9 +75,11 @@ th, td{
     border: 2px solid black;
 }
 
-.div-container{
+.div-container, .div-container-left{
     text-align: center;
     width:95vw;
+    margin-top:2em;
+    margin-bottom: 2em;
 }
  .found-shape{
     transform: scale(0);
@@ -69,12 +95,9 @@ th, td{
 }
 
 .heading-three{
-    font-size: 1em;
+    font-size: 1.5em;
 }
 
-form{
-    text-align: center;
-}
 
 select, input{
     margin-top:1em;
@@ -142,12 +165,61 @@ button:active{
     margin: 0;
 }
 
+.small-shape, .small-shape-spaced, .small-shape-extra-spaced{
+    width:2.5em;
+    height:2.5em;
+}
+
+.small-shape-spaced{
+    margin-right:0.5em
+}
+.small-shape-extra-spaced{
+    margin-right: 20vw;
+}
+
+.div-container-left{
+    text-align: left;
+}
+
+.flex-col, .flex-col-container{
+}
+
+form h2{
+    margin-bottom: 1em !important
+}
+.flex-row, .flex-row-container, .flex-row-stretch, .flex-row-between{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.flex-row-left{
+    align-items: flex-start;
+}
+
+.flex-row-stretch, .flex-row-stretch-container{
+    text-align: left;
+    justify-content: space-between;
+}
+
+.flex-row-between{
+    justify-content: flex-start;
+}
+
+.flex-row-container, .flex-row-stretch-container{
+    margin-top:1em;
+    margin-bottom: 1em;
+}
+
+
 #shape-div-random, .shape-div-instructions{
     width: 95%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-evenly;
+    align-items: center;
     border: 2px solid;
     margin: 0.5em;
 }
@@ -159,11 +231,15 @@ button:active{
     margin: 0.3em;
 }
 
-.shape-small{
+.shape-small, .shape-small-spaced{
     width:4vh;
     height: 4vh;
     border: 2px solid black;
     margin: 0.3em;
+}
+
+.shape-small-spaced{
+    margin-right:2em;
 }
 
 .smiley-button{
