@@ -100,6 +100,8 @@ class Util{
         }
         else{
             message = msg;
+            msg.style.height='100%'
+            msg.style.margin= '0 auto'
         }
         
         this.appendChildren(content, [close,message])
@@ -123,4 +125,70 @@ class Util{
             
         
     }
+    static createHeadingShapes = (side) => {
+        const right = document.createElement('div')
+        const img3 = Util.createElement('img', '', 'small-shape')
+        const img4 = Util.createElement('img', '', 'small-shape')
+        img3.src = 'img/new/circle-blue.svg'
+        img4.src = 'img/new/triangle.svg'
+    
+        const left = document.createElement('div')
+        const img1 = Util.createElement('img', '', 'small-shape')
+        const img2 = Util.createElement('img', '', 'small-shape')
+        img1.src = 'img/new/star-on.svg'
+        img2.src = 'img/new/cross.svg'
+    
+        Util.appendChildren(right, [img1, img2])
+        Util.appendChildren(left, [img3, img4])
+        return [right, left]
+    }
+
+    static createHeader(text=''){
+        const header = Util.createElement('div', 'regular-header','flex-row')
+        const [right_shapes, left_shapes] = Util.createHeadingShapes()
+        text==''?text='Home Rocks':text
+        const heading = Util.createElement('h1', '', 'heading-two', text)
+        Util.appendChildren(header, [left_shapes, heading, right_shapes])
+        return header
+    }
+
+    static createNext(){
+        const next = document.createElement('div')
+        const nextImage = Util.createElement('img', '','small-shape')
+        nextImage.src='img/new/next-on.svg'
+        const nextP = Util.createElement('h2', '', 'heading-three-no-space', 'Next')
+        Util.appendChildren(next, [nextImage,nextP])
+        next.style.textAlign = "right"
+        return next
+    }
+
+    static createFooter(back='',next='',text=''){
+        const footer = document.createElement('footer')
+        //##5ce65c
+        if(text!=''){
+            const msg = Util.createElement('h2', '', 'heading-two-no-space', text)
+            footer.appendChild(msg)
+            footer.className='actionFooter'
+        }
+        else if(back==''){
+            footer.appendChild(next)
+            footer.className='singleFooter'
+        }
+        else{
+            Util.appendChildren(footer, [back,next])
+            footer.className='doubleFooter'
+        }
+        return footer
+    }
+
+    static createBack(){
+        const back = document.createElement('div')
+        const backImage = Util.createElement('img', '','small-shape')
+        backImage.src='img/new/back-on.svg'
+        const backP = Util.createElement('h2', '', 'heading-three-no-space', 'Back')
+        Util.appendChildren(back, [backImage,backP])
+        back.style.textAlign = "left"
+        return back
+    }
+    
 }

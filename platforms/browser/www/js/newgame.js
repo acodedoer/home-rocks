@@ -4,50 +4,97 @@ const CreateNew = () => {
         e.preventDefault()
         let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
-    }
-}
+}}
 
 const SplashScreen = () => {
+    const app = Util.clear()
+    const div = document.createElement('div')
+    div.style.textAlign="center"
+    const [right, left] = Util.createHeadingShapes()
+    const title = Util.createElement('h1', '', 'heading-two-no-space', 'Home Rocks')
+    const trick = Util.createElement('p', '', '', "")
+    const p = Util.createElement('p', '', '', "ChiCi")
+    Util.appendChildren(div, [left,title,right])
+    Util.appendChildren(app, [trick, div, p])
     const MODEL = "https://teachablemachine.withgoogle.com/models/fYluH55oQ/" + "model.json";
     ml5.imageClassifier(MODEL).then(result => 
     {
         classifier = result
-        const app = Util.clear()
-        const title = Util.createElement('h1', '', 'heading-one', 'Home Rocks')
-        app.appendChild(title)
-        TestModel().then((result)=>{console.log(result)}).then(()=>CreateNew()).catch((err)=>{console.log(err);CreateNew()})
+        TestModel().then((result)=>{}).then(()=> {console.log("here"); ShowInstructions()}).catch((err)=>{console.log(err);ShowInstructions()})
     })
     .catch(err => {
         Util.showMessage('Make sure you have a working internet connection', SplashScreen, false)
     })
-    
 }
+
+ShowInstructions = () => {
+    const app = Util.clear()
+    const shapes = Util.setShapes(6);
+    const next = Util.createNext()
+    next.onclick  = () => CreateNew()
+    const footer = Util.createFooter('',next)
+
+    const header = Util.createHeader()
+    const heading = Util.createElement('h2', '', 'heading-three-no-space', 'Game Prep')
+    const list_div = Util.createElement('div', '', 'list-div')
+    const shapes_div = Util.createElement('div', '', 'shape-div-instructions')
+
+    shapes.forEach(element => {
+        const div = document.createElement('div')
+        div.appendChild(element.svg)
+        div.className ='shape-small'
+        shapes_div.appendChild(div)
+    });
+
+    const list = document.createElement('ol')
+    const inst = []
+    inst[0] = document.createElement('li')
+    let para0 = document.createElement('p')
+    para0.innerHTML = "Draw or print (<a  target='_blank' style='color:black' href ='http://www.chici.org/rocks'>from the ChiCi website</a> ) each of these shapes on a sheet of white paper."
+    inst[0].appendChild(para0)
+    inst[0].appendChild(shapes_div)
+
+    inst[1] = document.createElement('li')
+    let para1 = document.createElement('p')
+    para1.innerText = "There are two ways to paly. In 'Random' you can find the shapes in any order, in 'Routed' you have to find the shapes one after the other."
+    inst[1] = document.createElement('li')
+    inst[1].appendChild(para1)
+
+    inst[2] = document.createElement('li')
+    let para2 = document.createElement('p')
+    para2.innerText = "Choose the number of players and shapes."
+    inst[2] = document.createElement('li')
+    inst[2].appendChild(para2)
+    
+    
+    Util.appendChildren(list, [inst[0], inst[1], inst[2]])
+    list_div.appendChild(list)
+
+    const div = Util.createElement('div', '', 'div-container-left')
+    Util.appendChildren(div, [heading, list_div])
+    Util.appendChildren(app, [header, div, footer])
+}
+
 
 const SetupGame = () => {
     const app = Util.clear()
     const settings = {'selectmode':'Random', 'selectsize':3, 'selectplayers':2}
-    const form = document.createElement('form');
-    const settings_header = Util.createElement('div', 'absolute-header','flex-row')
-    const [right_shapes, left_shapes] = createHeadingShapes()
-
-    const heading = Util.createElement('h1', '', 'heading-two', 'Shapes Rock')
-    
-    Util.appendChildren(settings_header, [left_shapes, heading, right_shapes])
-    
-    const div_form =  Util.createElement('div', '', 'form-div')
+    const header = Util.createHeader()
+    const div_form =  Util.createElement('div', '', 'div-container-left')
     const selectMode = createSeletcMode(settings)
     const selectSize = createSelectSize(settings)
-    const selectPlayers =createSelectPlayers(settings)
-    const buttonCreate = Util.createElement('div','absolute-next')
-    const nextImage = document.createElement('img')
-    nextImage.src='img/new/next-on.svg'
-    const nextP = Util.createElement('h3', '', 'heading-three', 'Next')
-    Util.appendChildren(buttonCreate, [nextImage,nextP])
-    const frag = document.createDocumentFragment();
-    Util.appendChildren(frag, [settings_header, selectMode, selectSize, selectPlayers, buttonCreate])   
-    form.appendChild(frag)
-    div_form.appendChild(form)
-    Util.appendChildren(app, [settings_header, div_form])
+    const selectPlayers = createSelectPlayers(settings)
+    const buttonCreate = Util.createNext()
+    const buttonBack = Util.createBack()
+    buttonBack.onclick = () => ShowInstructions();
+    const footer = Util.createFooter(buttonBack,buttonCreate);
+    Util.appendChildren(div_form, [selectMode, selectSize, selectPlayers])   
+    Util.appendChildren(app, [header, div_form, footer])
+    if(App.utilobj.firstgame==false){
+        document.querySelector(`#star${App.utilobj.size}`).click()
+        document.querySelector(`#ball${App.utilobj.players}`).click()
+        document.querySelector(`#img-${App.utilobj.mode.toLowerCase()}`).click()
+    }
     return [buttonCreate, settings]
 }
 
@@ -68,7 +115,7 @@ const createSelectSize = (settings) => {
         }
     }
     for(let i = 1; i<=MAX; i++){
-        nodes[i] = Util.createElement('img', '', 'small-shape-spaced');
+        nodes[i] = Util.createElement('img', `star${i}`, 'small-shape-spaced');
         i<=3? nodes[i].src='img/new/star-on.svg':nodes[i].src='img/new/star-off.svg'
         nodes[i].onclick = ()=>setSize(MIN, i)
     }
@@ -91,11 +138,10 @@ const createSelectPlayers = (settings) => {
         for(let i = settings.selectplayers +1; i<=MAX; i++){
             setTimeout(()=>{nodes[i].src='img/new/circle-off.svg'},i*10)
         }
-        console.log(settings)
     }
     const nodes = []
     for(let i = 1; i<=MAX; i++){
-        nodes[i] = Util.createElement('img', '', 'small-shape-spaced');
+        nodes[i] = Util.createElement('img', `ball${i}`, 'small-shape-spaced');
         i<=2?nodes[i].src='img/new/circle-on.svg':nodes[i].src='img/new/circle-off.svg'
         nodes[i].onclick = ()=>setSize(MIN, i)
     }
@@ -110,12 +156,12 @@ const createSeletcMode = (settings) => {
     const modes_div = Util.createElement('div', '', 'flex-row-between')
 
     const routed_btn = Util.createElement('div', 'btn-routed')
-    const routed_img = Util.createElement('img', '', 'small-shape-extra-spaced')
+    const routed_img = Util.createElement('img', 'img-routed', 'small-shape-extra-spaced')
     routed_img.src = 'img/new/routed-off.svg'
     const routed_p = Util.createElement('p', '', 'align-center', 'Routed')
 
     const random_btn = Util.createElement('div', 'btn-random')
-    const random_img = Util.createElement('img', '', 'small-shape-extra-spaced')
+    const random_img = Util.createElement('img', 'img-random', 'small-shape-extra-spaced')
     random_img.src = 'img/new/random-on.svg'
     const random_p = Util.createElement('p', '', 'align-center', 'Random')
 
@@ -126,7 +172,6 @@ const createSeletcMode = (settings) => {
     Util.appendChildren(div, [heading,modes_div])
 
     const setMode = (e) =>{
-        console.log(e)
         if(e.target==random_img){
             routed_img.src = 'img/new/routed-off.svg'
             random_img.src = 'img/new/random-on.svg'
@@ -135,30 +180,12 @@ const createSeletcMode = (settings) => {
         else if(e.target==routed_img){
             routed_img.src = 'img/new/routed-on.svg'
             random_img.src = 'img/new/random-off.svg'
-            settings.selectmode = 'routed'
+            settings.selectmode = 'Routed'
         }
     }
     random_btn.onclick = setMode
     routed_btn.onclick = setMode
     return div
-}
-
-const createHeadingShapes = (side) => {
-    const right = document.createElement('div')
-    const img3 = Util.createElement('img', '', 'small-shape')
-    const img4 = Util.createElement('img', '', 'small-shape')
-    img3.src = 'img/new/triangle.svg'
-    img4.src = 'img/new/circle-blue.svg'
-
-    const left = document.createElement('div')
-    const img1 = Util.createElement('img', '', 'small-shape')
-    const img2 = Util.createElement('img', '', 'small-shape')
-    img1.src = 'img/new/star-on.svg'
-    img2.src = 'img/new/pentagon.svg'
-
-    Util.appendChildren(right, [img1, img2])
-    Util.appendChildren(left, [img3, img4])
-    return [right, left]
 }
 
 const SelectOptions = (name, label, values, settings) => {

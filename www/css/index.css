@@ -10,12 +10,72 @@
     font-family: 'my-font';
 }
 
-.app{
-    height:100vh;
+#name{
+    color: #00CCFF
+}
+
+#ready{
+    color: #ff0000
+}
+
+#steady{
+    color: #faf200
+}
+
+ol{
+    padding:1em;
+    margin: 0;
+}
+
+.singleFooter{
+    width: 90vw;
+    text-align: right;
+}
+
+
+.actionFooter{
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 100vw;
+    height: 10vh;
+    background-color: #00ff00;
+}
+
+.doubleFooter{
+    width: 90vw;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.app{
+    height:100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#scan-div, .modal, .modal-content{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#smileys{
+    flex-direction: column;
+}
+#collect-image{
+    height: 14vh;
+}
+
+#collect-text{
+    position: relative;
+    bottom: 12vh;
 }
 
 #absolute-header{
@@ -27,11 +87,59 @@
     top:0;
 }
 
-#absolute-next{
+#regular-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+#absolute-next, #absolute-back{
+    text-align: center;
     position: absolute;
-    bottom: 1em;
-    right: 1em;
     width:3em;
+    bottom: 1em;
+}
+
+.transparent{
+    color: transparent !important;
+}
+
+#div_name, #div_ready, #div_steady, #div_go{
+    animation: appear 1;
+}
+
+#div_name{
+    animation-duration: 0.1s;
+}
+
+#div_ready{
+    animation-duration: 0.6s;
+}
+
+#div_steady{
+    animation-duration: 1.1s;
+}
+
+#div_go{
+    animation-duration: 1.6s;
+}
+
+@keyframes appear {
+    from {visibility: hidden;}
+    to {visibility: visible;}
+  }
+
+#player-name{
+    color:#00ccff;
+    font-size: 2rem;
+}
+#absolute-next{
+    right: 1em;
+}
+
+#absolute-back{
+    left: 1em;
 }
 
 #btn-routed p, #btn-random p{
@@ -47,6 +155,10 @@ button{
     height: 2em;
 }
 
+.padded-container{
+    padding:1em;
+}
+
 .list-div{
     text-align: left;
 }
@@ -57,11 +169,6 @@ button{
     width: 15%;
 }
 
-.rankings-table{
-    border: 2px solid black;
-    text-align: center;
-    border-collapse: collapse;
-}
 td, th{
     padding: 0.2em;
     font-size: 1.3em;
@@ -72,31 +179,48 @@ th{
 }
 
 th, td{
-    border: 2px solid black;
+    text-align: right;
+}
+
+.div-vertical-spacing{
+    margin-top: 1em;
+    margin-bottom: 1em;
 }
 
 .div-container, .div-container-left{
     text-align: center;
-    width:95vw;
-    margin-top:2em;
-    margin-bottom: 2em;
+    width:80vw;
+}
+
+.div-container-left{
+    text-align: left;
 }
  .found-shape{
     transform: scale(0);
     transition-duration: 0.4s;
  }
 
+ .centered-p{
+    width: 80vw;
+    text-align: center;
+ }
+
  .heading-one{
     font-size: 3em;
  }
 
- .heading-two{
-    font-size: 2em;
+ .heading-two, .heading-two-no-space{
+    font-size: 2rem;
 }
 
-.heading-three{
-    font-size: 1.5em;
+.heading-two-no-space,.heading-three-no-space, .text-no-space, #heading-three-no-space{
+    margin: 0;
 }
+
+.heading-three, .heading-three-no-space, #heading-three-no-space{
+    font-size: 1.5rem;
+}
+
 
 
 select, input{
@@ -130,7 +254,7 @@ button:active{
     background-color:#9b9b9b;
 }
 
-.label-div, .heading-three{
+.label-div{
     margin:0px;
 }
 
@@ -166,8 +290,8 @@ button:active{
 }
 
 .small-shape, .small-shape-spaced, .small-shape-extra-spaced{
-    width:2.5em;
-    height:2.5em;
+    width:10vw;
+    height:10vw;
 }
 
 .small-shape-spaced{
@@ -177,16 +301,9 @@ button:active{
     margin-right: 20vw;
 }
 
-.div-container-left{
-    text-align: left;
-}
-
 .flex-col, .flex-col-container{
 }
 
-form h2{
-    margin-bottom: 1em !important
-}
 .flex-row, .flex-row-container, .flex-row-stretch, .flex-row-between{
     display: flex;
     flex-direction: row;
@@ -212,16 +329,30 @@ form h2{
     margin-bottom: 1em;
 }
 
+.collect-img{
+    height: 15vh;
+}
 
-#shape-div-random, .shape-div-instructions{
+.collect-text{
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+}
+
+
+
+
+#shape-div-random, #shape-div-random-centered,.shape-div-instructions{
     width: 95%;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-evenly;
     align-items: center;
-    border: 2px solid;
-    margin: 0.5em;
+}
+
+#shape-div-random-centered{
+    justify-content: center;
 }
 
 .shape{
@@ -248,6 +379,7 @@ form h2{
     border: 2px solid black;
     margin: 0.1em;
     padding: 0;
+    background-color: white;
 }
 
 #scan-div{
@@ -273,22 +405,20 @@ form h2{
 
 .wrong-scan{
     animation-name: shake;
-    animation-duration: 1s;
+    animation-duration: 0.5s;
 }
 
 
 @keyframes shake {
-    0%      {border-color: white;}
-    5%      {border-color: red;}
-    95%      {border-color: red;}
-    100%    {border-color: white;}
+    0%      {background-color: white;}
+    5%      {background-color: red;}
+    95%      {background-color: red;}
+    100%    {background-color: white;}
 }
 
 .modal {
-    display: block; /* Hidden by default */
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
     left: 0;
     top: 0;
     width: 100%; /* Full width */
@@ -304,6 +434,8 @@ form h2{
     padding: 20px;
     border: 1px solid #888;
     width: 80%;
+    justify-content: space-between;
+    align-items: flex-end;
   }
 
   .close {

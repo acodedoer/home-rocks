@@ -21,43 +21,42 @@ class Game{
     }
 
     showInstructions(){
-        let app = this.clear()
-        const back = Util.createElement('button', 'back-button','','Back')
+        const app = this.clear()
+        const back = Util.createBack()
+        const next = Util.createNext()
+        next.onclick = () => this.createPlayers()
         back.onclick  = () => CreateNew()
+        const footer = Util.createFooter(back,next)
 
-        let heading = document.createElement('h1')
-        heading.className = "heading-two"
-        heading.innerText = "How to Setup the Game"
-        let list_div = document.createElement('div');
-        list_div.className = 'list-div'
-
-        let shapes_div = document.createElement('div')
-        shapes_div.className = "shape-div-instructions"
+        const header = Util.createHeader()
+        const heading = Util.createElement('h2', '', 'heading-three-no-space', 'Game setup')
+        const list_div = Util.createElement('div', '', 'list-div')
+        const shapes_div = Util.createElement('div', '', 'shape-div-instructions')
 
         this.shapes.forEach(element => {
-            let div = document.createElement('div')
+            const div = document.createElement('div')
             div.appendChild(element.svg)
             div.className ='shape-small'
             shapes_div.appendChild(div)
         });
 
-        let list = document.createElement('ol')
-        let inst = []
+        const list = document.createElement('ol')
+        const inst = []
         inst[0] = document.createElement('li')
         let para0 = document.createElement('p')
-        para0.innerText = "Draw each of the following shapes on a plane white sheet of paper (you can also download and print each shape  from the chici website)."
+        para0.innerText = "Draw or print each shape on a plain white sheet of paper"
         inst[0].appendChild(para0)
         inst[0].appendChild(shapes_div)
 
         inst[1] = document.createElement('li')
         let para1 = document.createElement('p')
-        para1.innerText = "Hide each drawn or printed shape in a clever place around the house."
+        para1.innerText = "Hide each shape"
         inst[1] = document.createElement('li')
         inst[1].appendChild(para1)
 
         inst[2] = document.createElement('li')
         let para2 = document.createElement('p')
-        para2.innerText = "Press continue to enter the names of players. Then have the players take turns in finding and scanning the hidden shapes. The player that scans the most shapes in the least amount of time wins."
+        para2.innerText = "Have the players take turns in finding and snapping the shapes"
         inst[2] = document.createElement('li')
         inst[2].appendChild(para2)
         
@@ -65,57 +64,56 @@ class Game{
         Util.appendChildren(list, [inst[0], inst[1], inst[2]])
         list_div.appendChild(list)
 
-        let div = document.createElement('div')
-        let next = document.createElement('button')
-        div.className ='div-container'
-        next.innerText = 'Next';
-        Util.appendChildren(div, [heading, list_div, next])
-        Util.appendChildren(app, [div, back])
-        next.onclick = () => this.createPlayers()
+        const div = Util.createElement('div', '', 'div-container-left')
+        Util.appendChildren(div, [heading, list_div])
+        Util.appendChildren(app, [header, div, footer])
     }
 
     createPlayers(){
-        let app = this.clear()
-        const back = Util.createElement('button', 'back-button','','Back')
+        const app = this.clear()
+        const header = Util.createHeader()
+        const back = Util.createBack()
         back.onclick = () => this.showInstructions()
-        let player = []
-        let inputs = []
-        let form = document.createElement('form')
-        let frag = document.createDocumentFragment()
+        const next = Util.createNext()
+        const footer = Util.createFooter(back,next)
+        const player = []
+        const inputs = []
+        const form = Util.createElement('form', '', 'padded-container')
+        const frag = document.createDocumentFragment()
 
-        let text = document.createElement('h1')
-        text.className = 'heading-two'
-        text.innerText = "Name Player"
+        const text = Util.createElement('h2', '', 'heading-three-no-space', `Enter players' names`)
 
-        let div_text = document.createElement('div')
+        const div_text = Util.createElement('div', '', 'heading-div')
         div_text.appendChild(text)
-        div_text.className ='heading-div'
 
         frag.appendChild(div_text)
 
         for(let i = 0; i < this.playernum; i++){
-            let label = document.createElement('h3')
-            label.className = 'form-label'
-            label.innerText = `Player ${i+1}`
-
-            let div_label = document.createElement('div')
+            const label = Util.createElement('p', '', 'form-label', `Player ${i+1}`)
+            const div_label = Util.createElement('div', '', 'label-div')
             div_label.appendChild(label)
-            div_label.className ='label-div'
 
-            inputs[i] = document.createElement('input');
+            inputs[i] = Util.createElement('input');
             inputs[i].setAttribute('type', 'text')
             inputs[i].required = true;
             inputs[i].className = "input-name";
+            inputs[i].setAttribute('maxlength', 4)
             inputs[i].onchange = ({target}) => player[i] = target.value //check similar names here
+            if(App.utilobj.firstgame == false){
+                if(App.utilobj.names[i]!= undefined){
+                    inputs[i].value = App.utilobj.names[i]
+                    player[i] = App.utilobj.names[i]
+                }
+            }
             frag.appendChild(div_label)
             frag.appendChild(inputs[i])
         }
 
-        
-        let next = document.createElement('button')
-        next.innerText = 'Next';
         form.appendChild(frag)
-        Util.appendChildren(app, [back, form, next])
+
+        const div = Util.createElement('div', '', 'div-container-left')
+        Util.appendChildren(div, [text, form])
+        Util.appendChildren(app, [header, div, footer])
 
         const checkInputs = () =>{
             const names = document.querySelectorAll('input')
@@ -149,49 +147,65 @@ class Game{
     playGame(){
         if (this.count < this.playernum){
             const app = this.clear()
-            const div = Util.createElement('div', '', 'div-container')
-            const header = Util.createElement('h2', '', 'heading-two', `Get Ready ${this.players[this.count].name}`)
-            const inst = Util.createElement('p', '', '', 'Find and scan all your target shapes as quickly as possible. You win if you scan more shapes than you opponents in less time.<br/>Press "Start" to begin.')
-            inst.style.textAlign = 'left'
-            Util.appendChildren(div, [header, inst])
-            const next = Util.createElement('button', '', '', `Start`)        
+            const header = Util.createHeader()
+
+            const div_name = Util.createElement('div', 'div_name', 'div-vertical-spacing')
+            const name = Util.createElement('h2', '', 'heading-three-no-space', `<span id='player-name'>${(this.players[this.count].name).toUpperCase()}</span>`)
+            div_name.appendChild(name)
+
+            const div_ready = Util.createElement('div', 'div_ready', 'div-vertical-spacing')
+            const heading_one = Util.createElement('h2', 'ready', 'heading-three-no-space', `Are you Ready?`)
+            const msg_one = Util.createElement('p', '', 'text-no-space', 'Find and snap your target shapes')
+            Util.appendChildren(div_ready, [heading_one,msg_one])
+
+            const div_steady = Util.createElement('div', 'div_steady', 'div-vertical-spacing')
+            const heading_two = Util.createElement('h2', 'steady', 'heading-three-no-space', `Steady`)
+            const msg_two = Util.createElement('p', '', 'text-no-space', 'Snap all shapes in the quickest time to win')
+            Util.appendChildren(div_steady, [heading_two, msg_two])
+            
+            const div_container = Util.createElement('div', '', 'div-container-left')
+            Util.appendChildren(div_container, [div_name, div_ready, div_steady])
+
+            const next = Util.createFooter('','','Go!')
+            next.id = 'div_go'        
             next.onclick = () => {
                 if(App.utilobj.firstgame == true){
                 const rate = Util.createElement('div', '', '')
                 const msg = Util.createElement('p', '', 'p-rate', 'How much fun do you think this game will be?')
-                const faces = Util.createElement('div', '', 'shape-div-instructions')
+                const faces = Util.createElement('div', 'smileys', 'shape-div-instructions')
                 for(let i = 1; i<6; i++){
-                    const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                    const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/smiley${i}.svg"/>`)
                     faces.appendChild(btn)
                 }
                 Util.appendChildren(rate,[msg,faces])
+                console.log(this.mode)
+                console.log(this.play)
                 Util.showMessage(rate, () => this.play[this.mode](this.shapes, this.players[this.count]), true )
             }
             else{
                 this.play[this.mode](this.shapes, this.players[this.count])
             }
             }
-            Util.appendChildren(app,[div, next])
+            Util.appendChildren(app,[header, div_container, next])
         }
     }
 
     startTimer(size,player){
         let timer = document.createElement('h2')
         let time = this.time * size;
-        let current = 0
         timer.className = 'heading-two'
         timer.id = 'game-timer'
-        timer.innerText = `${current}`;
+        timer.innerText = `${time}`;
         
         let count = () =>{
-            if(current<time){
-                current+=1;
-                timer.innerText = `${current}`;
+            if(time>0){
+                time-=1;
+                timer.innerText = `${time}`;
             }
             else{
                 clearInterval(counter)
-                player.time = current;
-                this.showScore(player.score)
+                player.time = time;
+                this.showScore(false)
             }
         }
 
@@ -201,19 +215,17 @@ class Game{
 
     setStatus(length, player){
         const [timer, counter] = this.startTimer(length, player)
-        const status = Util.createElement('h1', 'game-status', 'heaing-two',`0 of ${length}`)
+        const status = Util.createElement('h2', 'game-status', 'heading-two',`0 of ${length} snapped`)
         return[[timer, counter], status]  
     }
 
-    getGameElements(heading = "Shapes to scan"){
+    getGameElements(heading = "find and snap"){
         const shape_div = Util.createElement('div', 'shape-div')
-        const shape_div_random = Util.createElement('div', 'shape-div-random')
+        const shape_div_random = Util.createElement('div', 'shape-div-random-centered')
         shape_div.appendChild(Util.createElement('h2', '', 'heading-two', heading))
         const camera = Util.createElement('div', 'camera-div','flex2')
-        const scan_div = Util.createElement('div', 'scan-div')
-        const scan = Util.createElement('button', '', '', "Scan")
-        scan_div.appendChild(scan)
-        return [shape_div, shape_div_random, camera, scan_div, scan]
+        const scan = Util.createFooter('','','Snap')
+        return [shape_div, shape_div_random, camera, scan]
     }
 
     addShapes(shapes, parent_div){
@@ -225,13 +237,16 @@ class Game{
     }
 
     playRandom(shapes, player){
+        const correctSound = document.querySelector('#correct')
+        const wrongSound = document.querySelector('#wrong')
+
         window.plugins.insomnia.keepAwake()
         const app = this.clear()
         let count = 0;
         let found = []
         player.score = 0;
         const [[timer, counter], status] = this.setStatus(shapes.length, player)
-        const [shape_div, shape_div_random, camera, scan_div, scan] = this.getGameElements()
+        const [shape_div, shape_div_random, camera, scan] = this.getGameElements()
         setupCamera();
 
         app.appendChild(status)
@@ -245,52 +260,57 @@ class Game{
         app.appendChild(camera)
 
         scan.onclick = ({target}) => {
-            target.disabled = true;
-            target.innerText = "Scanning..." 
+            scan.disabled = true;
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
             if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
+                correctSound.play()
                 found.push(result[0].label)
-                let shape_found = document.getElementById(`shape-${result[0].label}`)
+                const id = `shape-${result[0].label}`
+                let shape_found = document.getElementById(id)
                 shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {console.log('transition ended');document.getElementById('shape-div-random').removeChild(shape_found)});
+                shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
                 player.score += 1;
                 if(count < shapes.length - 1){
                     count += 1
-                    status.innerText = `${count} of ${shapes.length}`
+                    status.innerText = `${count} of ${shapes.length} snapped`
                 }
                 else{
                     clearInterval(counter)
                     player.time = timer.innerText
-                    this.showScore(player)
+                    this.showScore(true)
                 }
             }
             else{
-                shape_div_random.classList.add('wrong-scan')
-                const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-                shape_div_random.addEventListener("animationend", onAnimationEnd)
+                wrongSound.play()
+                // app.classList.add('wrong-scan')
+                // const onAnimationEnd = () => {app.removeEventListener("animationend",onAnimationEnd);app.classList.remove('wrong-scan')}
+                // app.addEventListener("animationend", onAnimationEnd)
             }
-            target.innerText = "Scan"
-            target.disabled = false;
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+            scan.disabled = false;
         }).catch((e)=> {
-            shape_div_random.classList.add('wrong-scan')
-            const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-            shape_div_random.addEventListener("animationend", onAnimationEnd)
-        target.innerText = "Scan"
-            target.disabled = false;
-            console.log(e);
+            wrongSound.play()
+            // app.classList.add('wrong-scan')
+            // const onAnimationEnd = () => {app.removeEventListener("animationend",onAnimationEnd);app.classList.remove('wrong-scan')}
+            // app.addEventListener("animationend", onAnimationEnd)
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+            scan.disabled = false;
         })}
 
-        app.appendChild(scan_div)
+        app.appendChild(scan)
 
     }
 
     playRouted(shapes, player){
         window.plugins.insomnia.keepAwake()
         const app = this.clear()
+        const correctSound = document.querySelector('#correct')
+        const wrongSound = document.querySelector('#wrong')
         let count = 0;
         player.score = 0;
         const [[timer, counter], status] = this.setStatus(shapes.length, player)
-        const [shape_div, shape_div_random, camera, scan_div, scan] = this.getGameElements("Next shape")
+        const [shape_div, shape_div_random, camera, scan] = this.getGameElements("find and snap")
         setupCamera();
 
         this.addShapes([shapes[count]], shape_div_random)
@@ -301,50 +321,52 @@ class Game{
         app.appendChild(shape_div)
         app.appendChild(camera)
 
-        scan.onclick = ({target}) => {
-            target.disabled = true;
-            target.innerText = "Scanning..." 
+        scan.onclick = () => {
+            scan.disabled = true;
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-            console.log('Shape: ', shapes[count].shape)
-            console.log('Scan: ',result[0].label )
             if(shapes[count].shape == result[0].label){
-                console.log('Correct Scan')
-                const shape_found = document.getElementById(`shape-${result[0].label}`)
+                correctSound.play()
+                const id = `shape-${result[0].label}`
+                const shape_found = document.getElementById(id)
                 shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {document.getElementById('shape-div-random').removeChild(shape_found);                if(count < shapes.length - 1){
+                shape_found.addEventListener("transitionend", ()=> {
+                    shape_found.style.display='none'        
                     if(count < shapes.length - 1){
-                        count += 1
-                        this.addShapes([shapes[count]], shape_div_random)
-                        status.innerText = `${count} of ${shapes.length}`}
-                }});
+                        if(count < shapes.length - 1){
+                            count += 1
+                            this.addShapes([shapes[count]], shape_div_random)
+                            status.innerText = `${count} of ${shapes.length} snapped`}
+                    }
+                });
                 player.score += 1;
                 if(count >= shapes.length - 1){
                     clearInterval(counter)
                     player.time = timer.innerText
-                    this.showScore(player)
+                    this.showScore(true)
                 }
             }
             else{
-                console.log('Wrong Scan')
-                shape_div_random.classList.add('wrong-scan')
-                const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-                shape_div_random.addEventListener("animationend", onAnimationEnd)
+                wrongSound.play()
+                // shape_div_random.classList.add('wrong-scan')
+                // const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+                // shape_div_random.addEventListener("animationend", onAnimationEnd)
             }
-            target.innerText = "Scan"
-            target.disabled = false;
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+            scan.disabled = false;
         }).catch((e)=> {
-            shape_div_random.classList.add('wrong-scan')
-            const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-            shape_div_random.addEventListener("animationend", onAnimationEnd)
-            target.innerText = "Scan"
-            target.disabled = false;
-            console.log(e);
+            wrongSound.play()
+            // shape_div_random.classList.add('wrong-scan')
+            // const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
+            // shape_div_random.addEventListener("animationend", onAnimationEnd)
+            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+            scan.disabled = false;
         })}
   
-        app.appendChild(scan_div)
+        app.appendChild(scan)
     }
 
-    showScore(){
+    showScore(completed){
         window.plugins.insomnia.allowSleepAgain()
         document.addEventListener("resume", onResume, false);
         function onResume() {
@@ -354,19 +376,27 @@ class Game{
         let player = this.players[this.count]
         this.count+=1;
 
-        const header = Util.createElement('h1', '', 'heading-two', `${player.name}'s Score`)
-        const para = Util.createElement('p', '', '', `You found ${player.score} out of ${this.size} shapes in ${player.time} seconds`)
+        let title = ""
+        if(completed == true){
+            title = "Great Job!"
+        }
+        else{
+            title = "Game Over"
+        }
+        const header = Util.createHeader(title)
+        const para = Util.createElement('p', 'heading-three-no-space', 'centered-p', `<span><h2 id='player-name'>${player.name.toUpperCase()}</h2>Snapped shape(s): ${player.score}<br/> Seconds left: ${player.time}<br> Points Scored: ${Number(player.score * 1000) + Number(player.time)}</span>`)
+        player.score = Number(player.score * 1000) + Number(player.time)
 
-        let next = document.createElement('button')
+        let next
         if(this.count < this.playernum){    
-            next.innerText = 'Next Player'
+            next = Util.createFooter('','',`${this.players[this.count].name.toUpperCase()}'s Turn`)
             next.onclick = () => {
                 document.removeEventListener("resume", onResume, false);
                 this.playGame()
             }
         }
         else{
-            next.innerText = 'Rankings'
+            next = Util.createFooter('','','Results')
             next.onclick = () => {
                 document.removeEventListener("resume", onResume, false);
                 this.showRankings()
@@ -377,9 +407,9 @@ class Game{
         if(App.utilobj.firstgame == true){
             const rate = Util.createElement('div', '', '')
             const msg = Util.createElement('p', '', 'p-rate', 'How much fun was the game?')
-            const faces = Util.createElement('div', '', 'shape-div-instructions')
+            const faces = Util.createElement('div', 'smileys', 'shape-div-instructions')
             for(let i = 1; i<6; i++){
-                const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/sm${i}.svg"/>`)
+                const btn = Util.createElement('button', '', 'smiley-button', `<img  class ="image-SVG" src = "img/smiley${i}.svg"/>`)
                 faces.appendChild(btn)
             }
             Util.appendChildren(rate,[msg,faces])
@@ -389,29 +419,32 @@ class Game{
 
     showRankings(){
         const app = this.clear()
-        const heading = Util.createElement('h1', '', 'heading-two', 'Player Rankings')
-        const rankings = Util.createElement('table', '', 'rankings-table', '<tr><th>Player</th><th>Score</th><th>Time</th></tr>');
-        const rankedPlayers = Util.rankPlayers(this.players,this.size*this.time)
+        const heading = Util.createHeader('Results')
+        const rankings = document.createElement('table')
+        const rankedPlayers =this.players.sort(function(a, b){return b.score-a.score});
         rankedPlayers.forEach(player=>{
             const tr = document.createElement('tr')
-            const tdname = Util.createElement('td', '', '', player.name)
-            const tdscore = Util.createElement('td', '', '', player.score)
-            const tdtime = Util.createElement('td', '', '', player.time)
-            Util.appendChildren(tr, [tdname, tdscore, tdtime])
+            const tdname = Util.createElement('td', '', '', `${player.name}:`)
+            const tdscore = Util.createElement('td', '', '', `${player.score} points`)
+            Util.appendChildren(tr, [tdname, tdscore])
             rankings.appendChild(tr)
         })
-
-        const winner = Util.createElement('h2', '','heading-two', `${rankedPlayers[0].name} Won!!!`)
+        let winners = []
+        winners = rankedPlayers.filter((el)=> el.score==rankedPlayers[0].score)
+        let winner
+        if(winners.length>1){
+            winner = Util.createElement('h2', 'name','heading-two', `Draw!`)
+        }
+        else{
+            winner = Util.createElement('h2', 'name','heading-two', `${rankedPlayers[0].name.toUpperCase()} won!`)
+        }
         const winner_div = Util.createElement('div', '', 'winner-div')
         winner_div.appendChild(winner)
 
-        const replay = Util.createElement('button', '', '','Replay Game')
-        replay.onclick = () => {this.restart();}
+        const replay = Util.createFooter('', '', 'Replay')
+        replay.onclick = () => {for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }this.clear(); CreateNew()}
 
-        const newgame = Util.createElement('button', '', '','Create New')
-        newgame.onclick = () => {this.clear(); CreateNew()}
-
-        Util.appendChildren(app, [heading, rankings, winner_div,replay, newgame])
+        Util.appendChildren(app, [heading, winner_div, rankings, replay])
         App.utilobj.firstgame = false;
     }
 
