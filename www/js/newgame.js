@@ -20,7 +20,7 @@ const SplashScreen = () => {
     ml5.imageClassifier(MODEL).then(result => 
     {
         classifier = result
-        TestModel().then((result)=>{}).then(()=> {console.log("here"); ShowInstructions()}).catch((err)=>{console.log(err);ShowInstructions()})
+        TestModel().then((result)=>{}).then(()=> { ShowInstructions()}).catch((err)=>{console.log(err);})
     })
     .catch(err => {
         Util.showMessage('Make sure you have a working internet connection', SplashScreen, false)
@@ -175,7 +175,7 @@ const createSeletcMode = (settings) => {
         if(e.target==random_img){
             routed_img.src = 'img/new/routed-off.svg'
             random_img.src = 'img/new/random-on.svg'
-            settings.selectmode = 'random'
+            settings.selectmode = 'Random'
         }
         else if(e.target==routed_img){
             routed_img.src = 'img/new/routed-on.svg'

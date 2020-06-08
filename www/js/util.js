@@ -78,6 +78,16 @@ class Util{
         return 0;
     }
 
+    static finalFeedback(){
+        const div = Util.createElement('div', '', 'div-container')
+        const info1 = Util.createElement('p', '', '', "Tell us how you played your game by including the hashtag #chicirocks on Twitter, Instagram or Facebook.");
+        const sm = document.createElement('div');
+        sm.innerHTML = "<a target='_blank' href='http://www.twitter.com'><img class='sm' src='img/t.svg'></a> <a target='_blank' href='http://www.instagram.com'><img class='sm' src='img/i.svg'></a> <a target='_blank' href='http://www.facebook.com'><img  class='sm' src='img/f.svg'></a>"
+        const info2 = Util.createElement('p', '', '', "For more game ideas see <a target='_blank' style='color:black' href='http://www.chici.org/rocks'>the ChiCi website</a>");
+        Util.appendChildren(div, [info1,sm,info2])
+        return div;
+    }
+
     static rankPlayers(players, maxtime){
         let[a,b] = this.separatePlayers(players)
         a.sort(this.rankTime, maxtime)

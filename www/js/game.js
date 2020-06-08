@@ -1,5 +1,5 @@
 class Game{
-    constructor(mode, size, playernum, time = 30){
+    constructor(mode, size, playernum, time = 3){
         this.mode = mode;
         this.size = size;
         this.shapes = Util.setShapes(size)
@@ -81,9 +81,10 @@ class Game{
         div_text.appendChild(text)
 
         frag.appendChild(div_text)
-
+        const optionsFrag = document.createDocumentFragment()
+        const nicknames = ['', 'Jump', 'Star', 'Xtra', 'Yum', 'Puppy', 'Chimp', 'Blue', 'Pink', 'Tiny', 'Gold', 'ABCD', 'ZZZZ', 'XOXO', 'Dino', 'Ajay', 'Alex', 'Alys', 'Bird', 'Boss', 'Cali', 'Echo', 'Icey', 'Gray', 'Watt', 'York'].sort();
         for(let i = 0; i < this.playernum; i++){
-            const label = Util.createElement('p', '', 'form-label', `Player ${i+1}:`)
+            const label = Util.createElement('p', '', 'form-label', `Player ${i+1}: `)
             label.setAttribute('for', "select"+i)
             label.style.display = "inline"
             const div_label = Util.createElement('div', '', 'label-div')
@@ -92,9 +93,15 @@ class Game{
             inputs[i].id = "select"+i;
             inputs[i].required = true;
             inputs[i].className = "input-name";
+            const options = []
             for(let i = 0; i<nicknames.length; i++){
-                
+                options[i]= document.createElement('option')
+                options[i].setAttribute('value', nicknames[i])
+                options[i].innerText = nicknames[i]
+                optionsFrag.appendChild(options[i])
             }
+            inputs[i].appendChild(optionsFrag)
+            player[i] = "";
             inputs[i].onchange = ({target}) => player[i] = target.value //check similar names here
             if(App.utilobj.firstgame == false){
                 if(App.utilobj.names[i]!= undefined){
@@ -113,7 +120,7 @@ class Game{
         Util.appendChildren(app, [header, div, footer])
 
         const checkInputs = () =>{
-            const names = document.querySelectorAll('input')
+            const names = document.querySelectorAll('select')
             let isCompleted = true;
             let isUnique = true;
             const inputs = []
@@ -175,8 +182,6 @@ class Game{
                     faces.appendChild(btn)
                 }
                 Util.appendChildren(rate,[msg,faces])
-                console.log(this.mode)
-                console.log(this.play)
                 Util.showMessage(rate, () => this.play[this.mode](this.shapes, this.players[this.count]), true )
             }
             else{
@@ -428,20 +433,23 @@ class Game{
         })
         let winners = []
         winners = rankedPlayers.filter((el)=> el.score==rankedPlayers[0].score)
+
         let winner
         if(winners.length>1){
-            winner = Util.createElement('h2', 'name','heading-two', `Draw!`)
+            winner = Util.createElement('h2', 'winner-name','heading-two', `Draw!`)
         }
         else{
-            winner = Util.createElement('h2', 'name','heading-two', `${rankedPlayers[0].name.toUpperCase()} won!`)
+            winner = Util.createElement('h2', 'winner-name','heading-two', `${rankedPlayers[0].name.toUpperCase()} won!`)
         }
         const winner_div = Util.createElement('div', '', 'winner-div')
         winner_div.appendChild(winner)
+        winner_div.style.height= '3em'
 
         const replay = Util.createFooter('', '', 'Replay')
-        replay.onclick = () => {for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }this.clear(); CreateNew()}
+        replay.onclick = () => {App.utilobj.names = []; for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }this.clear(); CreateNew()}
 
-        Util.appendChildren(app, [heading, winner_div, rankings, replay])
+        const feedback = Util.finalFeedback();
+        Util.appendChildren(app, [heading, winner_div, rankings, feedback, replay])
         App.utilobj.firstgame = false;
     }
 
@@ -449,7 +457,6 @@ class Game{
         let app = document.querySelector('.app');
         app.innerHTML = ""
         CameraPreview.hide()
-        console.log("here")
         return app;
     }
 }
