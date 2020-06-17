@@ -1,5 +1,5 @@
 class Game{
-    constructor(mode, size, playernum, time = 3){
+    constructor(mode, size, playernum, time = 1){
         this.mode = mode;
         this.size = size;
         this.shapes = Util.setShapes(size)
@@ -454,7 +454,14 @@ class Game{
         winner_div.style.height= '3em'
 
         const replay = Util.createFooter('', '', 'Replay')
-        replay.onclick = () => {App.utilobj.names = []; for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }this.clear(); CreateNew()}
+        //https://play.google.com/store/apps/details?id=com.chici.homerocks
+        replay.onclick = () => {
+            App.utilobj.reviewcount+=1;
+            App.utilobj.names = []; 
+            for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }
+            this.clear(); 
+            CreateNew()
+        }
 
         const feedback = Util.finalFeedback();
         resultsDisplayed.play();

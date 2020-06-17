@@ -38,7 +38,7 @@ class Util{
     }
 
     static clear(){
-        let app = document.querySelector('.app')
+        const app = document.querySelector('.app')
         app.innerHTML = ""
         return app
     }

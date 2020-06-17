@@ -4,7 +4,17 @@ const CreateNew = () => {
         e.preventDefault()
         let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
-}}
+}
+    console.log(App.utilobj.reviewcount);
+    console.log(App.utilobj.review);
+    if(App.utilobj.review == false){
+        if(App.utilobj.reviewcount>=0){
+            console.log('in');
+           Util.showMessage( `<p>Would you like to review this game?</p><button onclick = "() => window.open('https://play.google.com')">Yes</button> <button onclick= "() => {const app = document.querySelector('.app'); app.removeChild(document.querySelector('.modal'))}">No</button>`)
+            reviewcount = 0;
+        }
+    }
+}
 
 const SplashScreen = () => {
     const app = Util.clear()
