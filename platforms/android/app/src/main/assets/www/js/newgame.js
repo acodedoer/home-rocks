@@ -4,23 +4,75 @@ const CreateNew = () => {
         e.preventDefault()
         let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
-    }
-}
+}}
 
 const SplashScreen = () => {
+    const app = Util.clear()
+    const div = document.createElement('div')
+    div.style.textAlign="center"
+    const [right, left] = Util.createHeadingShapes()
+    const title = Util.createElement('h1', '', 'heading-two-no-space', 'Home Rocks')
+    const trick = Util.createElement('p', '', '', "")
+    const p = Util.createElement('p', '', '', "ChiCi")
+    Util.appendChildren(div, [left,title,right])
+    Util.appendChildren(app, [trick, div, p])
     const MODEL = "https://teachablemachine.withgoogle.com/models/fYluH55oQ/" + "model.json";
     ml5.imageClassifier(MODEL).then(result => 
     {
         classifier = result
-        const app = Util.clear()
-        const title = Util.createElement('h1', '', 'heading-one', 'Home Rocks')
-        app.appendChild(title)
-        TestModel().then((result)=>{console.log(result)}).then(()=>CreateNew()).catch((err)=>{console.log(err);CreateNew()})
+        TestModel().then((result)=>{}).then(()=> { ShowInstructions()}).catch((err)=>{console.log(err);})
     })
     .catch(err => {
         Util.showMessage('Make sure you have a working internet connection', SplashScreen, false)
     })
+}
+
+ShowInstructions = () => {
+    const app = Util.clear()
+    const shapes = Util.setShapes(6);
+    const next = Util.createNext()
+    next.onclick  = () => CreateNew()
+    const footer = Util.createFooter('',next)
+
+    const header = Util.createHeader()
+    const heading = Util.createElement('h2', '', 'heading-three-no-space', 'Game Prep')
+    const list_div = Util.createElement('div', '', 'list-div')
+    const shapes_div = Util.createElement('div', '', 'shape-div-instructions')
+
+    shapes.forEach(element => {
+        const div = document.createElement('div')
+        div.appendChild(element.svg)
+        div.className ='shape-small'
+        shapes_div.appendChild(div)
+    });
+
+    const list = document.createElement('ol')
+    const inst = []
+    inst[0] = document.createElement('li')
+    let para0 = document.createElement('p')
+    para0.innerHTML = "Draw or print (<a  target='_blank' style='color:black' href ='http://www.chici.org/rocks'>from the ChiCi website</a>) each of these shapes on a sheet of white paper."
+    inst[0].appendChild(para0)
+    inst[0].appendChild(shapes_div)
+
+    inst[1] = document.createElement('li')
+    let para1 = document.createElement('p')
+    para1.innerText = "There are two ways to play. In 'Random' you can find the shapes in any order, in 'Routed' you have to find the shapes one after the other."
+    inst[1] = document.createElement('li')
+    inst[1].appendChild(para1)
+
+    inst[2] = document.createElement('li')
+    let para2 = document.createElement('p')
+    para2.innerText = "Choose the number of players and shapes."
+    inst[2] = document.createElement('li')
+    inst[2].appendChild(para2)
     
+    
+    Util.appendChildren(list, [inst[0], inst[1], inst[2]])
+    list_div.appendChild(list)
+
+    const div = Util.createElement('div', '', 'div-container-left')
+    Util.appendChildren(div, [heading, list_div])
+    Util.appendChildren(app, [header, div, footer])
 }
 
 const SetupGame = () => {
@@ -32,15 +84,15 @@ const SetupGame = () => {
     const selectSize = createSelectSize(settings)
     const selectPlayers = createSelectPlayers(settings)
     const buttonCreate = Util.createNext()
-    const footer = Util.createFooter('',buttonCreate);
+    const buttonBack = Util.createBack()
+    buttonBack.onclick = () => ShowInstructions();
+    const footer = Util.createFooter(buttonBack,buttonCreate);
     Util.appendChildren(div_form, [selectMode, selectSize, selectPlayers])   
     Util.appendChildren(app, [header, div_form, footer])
     if(App.utilobj.firstgame==false){
         document.querySelector(`#star${App.utilobj.size}`).click()
         document.querySelector(`#ball${App.utilobj.players}`).click()
         document.querySelector(`#img-${App.utilobj.mode.toLowerCase()}`).click()
-
-
     }
     return [buttonCreate, settings]
 }
@@ -122,7 +174,7 @@ const createSeletcMode = (settings) => {
         if(e.target==random_img){
             routed_img.src = 'img/new/routed-off.svg'
             random_img.src = 'img/new/random-on.svg'
-            settings.selectmode = 'random'
+            settings.selectmode = 'Random'
         }
         else if(e.target==routed_img){
             routed_img.src = 'img/new/routed-on.svg'

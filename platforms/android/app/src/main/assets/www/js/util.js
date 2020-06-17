@@ -78,6 +78,16 @@ class Util{
         return 0;
     }
 
+    static finalFeedback(){
+        const div = Util.createElement('div', '', 'div-container')
+        const info1 = Util.createElement('p', '', '', "Tell us how you played your game by including the hashtag #chicirocks on Twitter, Instagram or Facebook.");
+        const sm = document.createElement('div');
+        sm.innerHTML = "<a target='_blank' href='http://www.twitter.com'><img class='sm' src='img/t.svg'></a> <a target='_blank' href='http://www.instagram.com'><img class='sm' src='img/i.svg'></a> <a target='_blank' href='http://www.facebook.com'><img  class='sm' src='img/f.svg'></a>"
+        const info2 = Util.createElement('p', '', '', "For more game ideas see <a target='_blank' style='color:black' href='http://www.chici.org/rocks'>the ChiCi website</a>");
+        Util.appendChildren(div, [info1,sm,info2])
+        return div;
+    }
+
     static rankPlayers(players, maxtime){
         let[a,b] = this.separatePlayers(players)
         a.sort(this.rankTime, maxtime)
@@ -125,7 +135,6 @@ class Util{
             
         
     }
-
     static createHeadingShapes = (side) => {
         const right = document.createElement('div')
         const img3 = Util.createElement('img', '', 'small-shape')
@@ -159,22 +168,29 @@ class Util{
         nextImage.src='img/new/next-on.svg'
         const nextP = Util.createElement('h2', '', 'heading-three-no-space', 'Next')
         Util.appendChildren(next, [nextImage,nextP])
+        next.style.textAlign = "right"
         return next
     }
 
     static createFooter(back='',next='',text=''){
+        const buttonClick = document.querySelector('#button-click')
         const footer = document.createElement('footer')
-        //##5ce65c
         if(text!=''){
             const msg = Util.createElement('h2', '', 'heading-two-no-space', text)
+            if(text!="Snap"){
+                footer.addEventListener('click', () => buttonClick.play());
+            }
             footer.appendChild(msg)
             footer.className='actionFooter'
         }
         else if(back==''){
+            next.addEventListener('click', ()=>buttonClick.play());
             footer.appendChild(next)
             footer.className='singleFooter'
         }
         else{
+            next.addEventListener('click', () => buttonClick.play());
+            back.addEventListener('click', () => buttonClick.play());
             Util.appendChildren(footer, [back,next])
             footer.className='doubleFooter'
         }
@@ -187,6 +203,7 @@ class Util{
         backImage.src='img/new/back-on.svg'
         const backP = Util.createElement('h2', '', 'heading-three-no-space', 'Back')
         Util.appendChildren(back, [backImage,backP])
+        back.style.textAlign = "left"
         return back
     }
     

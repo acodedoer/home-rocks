@@ -75,7 +75,6 @@ ShowInstructions = () => {
     Util.appendChildren(app, [header, div, footer])
 }
 
-
 const SetupGame = () => {
     const app = Util.clear()
     const settings = {'selectmode':'Random', 'selectsize':3, 'selectplayers':2}

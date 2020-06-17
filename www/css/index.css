@@ -1,7 +1,8 @@
 @font-face {
     font-family: "my-font";
-    src: url("../assets/font.TTF"); 
+    src: url("../assets/fonts/font.TTF"); 
   }
+
   body {
     height:100vh;
     margin:0px;

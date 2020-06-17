@@ -1,7 +1,8 @@
 @font-face {
     font-family: "my-font";
-    src: url("../assets/font.TTF"); 
+    src: url("../assets/fonts/font.TTF"); 
   }
+
   body {
     height:100vh;
     margin:0px;
@@ -10,8 +11,19 @@
     font-family: 'my-font';
 }
 
-#name{
-    color: #00CCFF
+#winner-name{
+    color: #00CCFF;
+    animation-name: winner;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+}
+
+
+@keyframes winner {
+    0%      {color: #00CCFF; font-size: 2rem;}
+    25%      {color: rgb(5, 158, 196); font-size: 2.5rem;}
+    75%      {color: rgb(5, 158, 196); font-size: 2.5rem;}
+    100%    {color: #00CCFF; font-size: 2rem;}
 }
 
 #ready{
@@ -182,6 +194,11 @@ th, td{
     text-align: right;
 }
 
+.sm{
+    width: 2em;
+    margin: 2.5px;
+}
+
 .div-vertical-spacing{
     margin-top: 1em;
     margin-bottom: 1em;
@@ -246,7 +263,7 @@ button{
 }
 
 select, input{
-    width: 50vw;
+    width: 30vw;
     height: 2em;
 }
 

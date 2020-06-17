@@ -50,13 +50,13 @@ ShowInstructions = () => {
     const inst = []
     inst[0] = document.createElement('li')
     let para0 = document.createElement('p')
-    para0.innerHTML = "Draw or print (<a  target='_blank' style='color:black' href ='http://www.chici.org/rocks'>from the ChiCi website</a> ) each of these shapes on a sheet of white paper."
+    para0.innerHTML = "Draw or print (<a  target='_blank' style='color:black' href ='http://www.chici.org/rocks'>from the ChiCi website</a>) each of these shapes on a sheet of white paper."
     inst[0].appendChild(para0)
     inst[0].appendChild(shapes_div)
 
     inst[1] = document.createElement('li')
     let para1 = document.createElement('p')
-    para1.innerText = "There are two ways to paly. In 'Random' you can find the shapes in any order, in 'Routed' you have to find the shapes one after the other."
+    para1.innerText = "There are two ways to play. In 'Random' you can find the shapes in any order, in 'Routed' you have to find the shapes one after the other."
     inst[1] = document.createElement('li')
     inst[1].appendChild(para1)
 
@@ -74,7 +74,6 @@ ShowInstructions = () => {
     Util.appendChildren(div, [heading, list_div])
     Util.appendChildren(app, [header, div, footer])
 }
-
 
 const SetupGame = () => {
     const app = Util.clear()

@@ -173,18 +173,24 @@ class Util{
     }
 
     static createFooter(back='',next='',text=''){
+        const buttonClick = document.querySelector('#button-click')
         const footer = document.createElement('footer')
-        //##5ce65c
         if(text!=''){
             const msg = Util.createElement('h2', '', 'heading-two-no-space', text)
+            if(text!="Snap"){
+                footer.addEventListener('click', () => buttonClick.play());
+            }
             footer.appendChild(msg)
             footer.className='actionFooter'
         }
         else if(back==''){
+            next.addEventListener('click', ()=>buttonClick.play());
             footer.appendChild(next)
             footer.className='singleFooter'
         }
         else{
+            next.addEventListener('click', () => buttonClick.play());
+            back.addEventListener('click', () => buttonClick.play());
             Util.appendChildren(footer, [back,next])
             footer.className='doubleFooter'
         }
