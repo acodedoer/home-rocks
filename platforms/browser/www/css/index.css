@@ -318,8 +318,6 @@ button:active{
     margin-right: 20vw;
 }
 
-.flex-col, .flex-col-container{
-}
 
 .flex-row, .flex-row-container, .flex-row-stretch, .flex-row-between{
     display: flex;
