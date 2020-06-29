@@ -210,6 +210,7 @@ class Game{
                 timeUp.play();
                 clearInterval(counter)
                 player.time = time;
+                App.timeup = true;
                 this.showScore(false)
             }
         }
@@ -242,12 +243,6 @@ class Game{
     }
 
     playRandom(shapes, player){
-        const correctSound = document.querySelector('#correct-scan')
-        const wrongSound = document.querySelector('#wrong-scan')
-        const snapClick = document.querySelector('#snap')
-        const timerStarted = document.querySelector('#timer-started')
-        const levelComplete = document.querySelector('#level-complete')
-
         let scanning = false;
 
         window.plugins.insomnia.keepAwake()
@@ -268,49 +263,51 @@ class Game{
 
         app.appendChild(shape_div)
         app.appendChild(camera)
-        scan.onclick = ({target}) => {
+        scan.onclick = () => {
             if(scanning!=true){
             App.audio = document.querySelector('#snap');
             App.audio.play();
             scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-            if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
-                if(count < shapes.length - 1){
-                    App.audio = document.querySelector('#correct-sacn');
-                    App.audio.play()
+                if(App.timeup == false){
+                    if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
+                        if(count < shapes.length - 1){
+                            App.audio = document.querySelector('#correct-sacn');
+                            App.audio.play()
+                        }
+                        found.push(result[0].label)
+                        const id = `shape-${result[0].label}`
+                        let shape_found = document.getElementById(id)
+                        shape_found.classList.toggle('found-shape');
+                        shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
+                        player.score += 1;
+                        if(count < shapes.length - 1){
+                            count += 1
+                            status.innerText = `${count} of ${shapes.length} snapped`
+                        }
+                        else{
+                            App.audio = document.querySelector('#level-complete');
+                            App.audio.play()
+                            clearInterval(counter)
+                            player.time = timer.innerText
+                            this.showScore(true)
+                        }
+                    }
+                    else{
+                        App.audio = document.querySelector('#wrong-scan');
+                        App.audio.play()
+                    }
+                    scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+                    scanning = false;
                 }
-                found.push(result[0].label)
-                const id = `shape-${result[0].label}`
-                let shape_found = document.getElementById(id)
-                shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
-                player.score += 1;
-                if(count < shapes.length - 1){
-                    count += 1
-                    status.innerText = `${count} of ${shapes.length} snapped`
-                }
-                else{
-                    App.audio = document.querySelector('#level-complete');
-                    App.audio.play()
-                    clearInterval(counter)
-                    player.time = timer.innerText
-                    this.showScore(true)
-                }
-            }
-            else{
-                App.audio = document.querySelector('#wrong-scan');
-                App.audio.play()
-            }
-            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-            scanning = false;
         }).catch((e)=> {
             App.audio = document.querySelector('#wrong-scan');
             App.audio.play()
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
             scanning = false;
         })}}
-
+        App.timeup = false;
         App.audio = document.querySelector('#timer-started');
         App.audio.play()
         app.appendChild(scan)
@@ -344,36 +341,38 @@ class Game{
             scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-            if(shapes[count].shape == result[0].label){
-                if(count < shapes.length - 1){
-                    App.audio = document.querySelector('#correct-scan');
-                    App.audio.play()
-                }
-                player.score += 1;
-                const id = `shape-${result[0].label}`
-                const shape_found = document.getElementById(id)
-                shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {
-                    shape_found.style.display='none'        
-                    if(count < shapes.length - 1){
-                        count += 1
-                        this.addShapes([shapes[count]], shape_div_random)
-                        status.innerText = `${count} of ${shapes.length} snapped`}
+                 if(App.timeup == false){
+                    if(shapes[count].shape == result[0].label){
+                        if(count < shapes.length - 1){
+                            App.audio = document.querySelector('#correct-scan');
+                            App.audio.play()
+                        }
+                        player.score += 1;
+                        const id = `shape-${result[0].label}`
+                        const shape_found = document.getElementById(id)
+                        shape_found.classList.toggle('found-shape');
+                        shape_found.addEventListener("transitionend", ()=> {
+                            shape_found.style.display='none'        
+                            if(count < shapes.length - 1){
+                                count += 1
+                                this.addShapes([shapes[count]], shape_div_random)
+                                status.innerText = `${count} of ${shapes.length} snapped`}
+                            else{
+                                App.audio = document.querySelector('#level-complete');
+                                App.audio.play()
+                                clearInterval(counter)
+                                player.time = timer.innerText
+                                this.showScore(true)} 
+                            });
+            
+                    }
                     else{
-                        App.audio = document.querySelector('#level-complete');
+                        App.audio = document.querySelector('#wrong-scan');
                         App.audio.play()
-                        clearInterval(counter)
-                        player.time = timer.innerText
-                        this.showScore(true)} 
-                    });
-    
-            }
-            else{
-                App.audio = document.querySelector('#wrong-scan');
-                App.audio.play()
-            }
-            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-            scan.disabled = false;
+                    }
+                    scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+                    scan.disabled = false;
+                 }
         }).catch((e)=> {
             App.audio = document.querySelector('#wrong-scan');
             App.audio.play()
@@ -382,6 +381,7 @@ class Game{
         })}
     }
 
+        App.timeup = false;
         App.audio = document.querySelector('#timer-started');
         App.audio.play()
         app.appendChild(scan)

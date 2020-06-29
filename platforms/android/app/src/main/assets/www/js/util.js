@@ -38,7 +38,7 @@ class Util{
     }
 
     static clear(){
-        let app = document.querySelector('.app')
+        const app = document.querySelector('.app')
         app.innerHTML = ""
         return app
     }
@@ -96,6 +96,27 @@ class Util{
         c.push(...a)
         c.push(...b)
         return c
+    }
+
+    static askReview(){
+        const app = document.querySelector('.app');
+        const modal = this.createElement('div','', 'modal')
+        const content = this.createElement('div', '', 'modal-content')
+        const close = this.createElement('span', '', 'close', '&times')
+        const div = document.createElement('div')
+        const message = this.createElement('h2', '', 'modal-message', 'Do you want to review this game?')
+        const reviewButton = this.createElement('button','','','Yes')
+        const closeButton = this.createElement('button','','','No')
+        
+        reviewButton.onclick = () =>{window.open('https://play.google.com');app.removeChild(modal)}
+        closeButton.onclick = ()=> {app.removeChild(modal)}
+        this.appendChildren(div, [message,reviewButton,closeButton])
+        div.style.textAlign = "center";
+        
+        this.appendChildren(content, [close,div])
+        modal.appendChild(content)
+        app.appendChild(modal)
+        close.onclick = ()=> {app.removeChild(modal)}
     }
 
     static showMessage(msg, func="", element = false){

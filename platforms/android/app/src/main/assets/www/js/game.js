@@ -193,8 +193,6 @@ class Game{
     }
 
     startTimer(size,player){
-        
-        const timeUp = document.querySelector('#time-up')
         let timer = document.createElement('h2')
         let time = this.time * size;
         timer.className = 'heading-two'
@@ -207,7 +205,10 @@ class Game{
                 timer.innerText = `${time}`;
             }
             else{
-                timeUp.play();
+                App.timeup = true;
+                App.audio.pause();
+                App.audio = document.querySelector('#time-up');
+                App.audio.play();
                 clearInterval(counter)
                 player.time = time;
                 this.showScore(false)
@@ -242,12 +243,6 @@ class Game{
     }
 
     playRandom(shapes, player){
-        const correctSound = document.querySelector('#correct-scan')
-        const wrongSound = document.querySelector('#wrong-scan')
-        const snapClick = document.querySelector('#snap')
-        const timerStarted = document.querySelector('#timer-started')
-        const levelComplete = document.querySelector('#level-complete')
-
         let scanning = false;
 
         window.plugins.insomnia.keepAwake()
@@ -268,45 +263,53 @@ class Game{
 
         app.appendChild(shape_div)
         app.appendChild(camera)
-        scan.onclick = ({target}) => {
+        scan.onclick = () => {
             if(scanning!=true){
-            snapClick.play();
+            App.audio = document.querySelector('#snap');
+            App.audio.play();
             scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-            if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
-                if(count < shapes.length - 1){
-                    correctSound.play()
+                if(App.timeup == false){
+                    if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
+                        if(count < shapes.length - 1){
+                            App.audio = document.querySelector('#correct-sacn');
+                            App.audio.play()
+                        }
+                        found.push(result[0].label)
+                        const id = `shape-${result[0].label}`
+                        let shape_found = document.getElementById(id)
+                        shape_found.classList.toggle('found-shape');
+                        shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
+                        player.score += 1;
+                        if(count < shapes.length - 1){
+                            count += 1
+                            status.innerText = `${count} of ${shapes.length} snapped`
+                        }
+                        else{
+                            App.audio = document.querySelector('#level-complete');
+                            App.audio.play()
+                            clearInterval(counter)
+                            player.time = timer.innerText
+                            this.showScore(true)
+                        }
+                    }
+                    else{
+                        App.audio = document.querySelector('#wrong-scan');
+                        App.audio.play()
+                    }
+                    scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+                    scanning = false;
                 }
-                found.push(result[0].label)
-                const id = `shape-${result[0].label}`
-                let shape_found = document.getElementById(id)
-                shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
-                player.score += 1;
-                if(count < shapes.length - 1){
-                    count += 1
-                    status.innerText = `${count} of ${shapes.length} snapped`
-                }
-                else{
-                    levelComplete.play();
-                    clearInterval(counter)
-                    player.time = timer.innerText
-                    this.showScore(true)
-                }
-            }
-            else{
-                wrongSound.play()
-            }
-            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-            scanning = false;
         }).catch((e)=> {
-            wrongSound.play()
+            App.audio = document.querySelector('#wrong-scan');
+            App.audio.play()
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
             scanning = false;
         })}}
-
-        timerStarted.play();
+        App.timeup = false;
+        App.audio = document.querySelector('#timer-started');
+        App.audio.play()
         app.appendChild(scan)
 
     }
@@ -314,6 +317,7 @@ class Game{
     playRouted(shapes, player){
         window.plugins.insomnia.keepAwake()
         const app = this.clear()
+        let scanning = false;
         const correctSound = document.querySelector('#correct')
         const wrongSound = document.querySelector('#wrong')
         let count = 0;
@@ -330,48 +334,56 @@ class Game{
         app.appendChild(shape_div)
         app.appendChild(camera)
 
-        scan.onclick = () => {
-            scan.disabled = true;
+        scan.onclick = () => {           
+            if(scanning!=true){
+            App.audio = document.querySelector('#snap');
+            App.audio.play();
+            scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-            if(shapes[count].shape == result[0].label){
-                correctSound.play()
-                const id = `shape-${result[0].label}`
-                const shape_found = document.getElementById(id)
-                shape_found.classList.toggle('found-shape');
-                shape_found.addEventListener("transitionend", ()=> {
-                    shape_found.style.display='none'        
-                    if(count < shapes.length - 1){
+                 if(App.timeup == false){
+                    if(shapes[count].shape == result[0].label){
                         if(count < shapes.length - 1){
-                            count += 1
-                            this.addShapes([shapes[count]], shape_div_random)
-                            status.innerText = `${count} of ${shapes.length} snapped`}
+                            App.audio = document.querySelector('#correct-scan');
+                            App.audio.play()
+                        }
+                        player.score += 1;
+                        const id = `shape-${result[0].label}`
+                        const shape_found = document.getElementById(id)
+                        shape_found.classList.toggle('found-shape');
+                        shape_found.addEventListener("transitionend", ()=> {
+                            shape_found.style.display='none'        
+                            if(count < shapes.length - 1){
+                                count += 1
+                                this.addShapes([shapes[count]], shape_div_random)
+                                status.innerText = `${count} of ${shapes.length} snapped`}
+                            else{
+                                App.audio = document.querySelector('#level-complete');
+                                App.audio.play()
+                                clearInterval(counter)
+                                player.time = timer.innerText
+                                this.showScore(true)} 
+                            });
+            
                     }
-                });
-                player.score += 1;
-                if(count >= shapes.length - 1){
-                    clearInterval(counter)
-                    player.time = timer.innerText
-                    this.showScore(true)
-                }
-            }
-            else{
-                wrongSound.play()
-                // shape_div_random.classList.add('wrong-scan')
-                // const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-                // shape_div_random.addEventListener("animationend", onAnimationEnd)
-            }
-            scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-            scan.disabled = false;
+                    else{
+                        App.audio = document.querySelector('#wrong-scan');
+                        App.audio.play()
+                    }
+                    scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
+                    scan.disabled = false;
+                 }
         }).catch((e)=> {
-            wrongSound.play()
-            // shape_div_random.classList.add('wrong-scan')
-            // const onAnimationEnd = () => {shape_div_random.removeEventListener("animationend",onAnimationEnd);shape_div_random.classList.remove('wrong-scan')}
-            // shape_div_random.addEventListener("animationend", onAnimationEnd)
+            App.audio = document.querySelector('#wrong-scan');
+            App.audio.play()
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
             scan.disabled = false;
         })}
-  
+    }
+
+        App.timeup = false;
+        App.audio = document.querySelector('#timer-started');
+        App.audio.play()
         app.appendChild(scan)
     }
 
@@ -456,17 +468,11 @@ class Game{
         const replay = Util.createFooter('', '', 'Replay')
         //https://play.google.com/store/apps/details?id=com.chici.homerocks
         replay.onclick = () => {
+            App.utilobj.reviewcount+=1;
             App.utilobj.names = []; 
             for(let i =0; i<this.players.length;i++){App.utilobj.names.push(this.players[i].name); App.utilobj.mode = this.mode; App.utilobj.size = this.size; App.utilobj.players = this.playernum; }
             this.clear(); 
             CreateNew()
-            reviewcount+=1;
-            if(App.utilobj.review =! true){
-                if(App.utilobj.reviewcount>=2){
-                    Util.showMessage('Would you like to review this game?', ()=>{app.removeChild(document.getElementsByClassName('modal')); window.open('https://play.google.com')})
-                    reviewcount = 0;
-                }
-            }
         }
 
         const feedback = Util.finalFeedback();
