@@ -11,27 +11,13 @@
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="1000"
    height="1000"
-   viewBox="0 0 264.58334 264.58334"
+   viewBox="0 0 264.58333 264.58334"
    version="1.1"
    id="svg8"
    inkscape:version="0.92.1 r15371"
-   sodipodi:docname="triangle.svg">
+   sodipodi:docname="rightangletriangle.svg">
   <defs
-     id="defs2">
-    <clipPath
-       clipPathUnits="userSpaceOnUse"
-       id="clipPath4487">
-      <rect
-         y="113.23527"
-         x="-14.883694"
-         height="232.7085"
-         width="232.7085"
-         id="rect4489"
-         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:3.33546329;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-         transform="rotate(-45)"
-         clip-path="none" />
-    </clipPath>
-  </defs>
+     id="defs2" />
   <sodipodi:namedview
      id="base"
      pagecolor="#ffffff"
@@ -39,9 +25,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.5935"
-     inkscape:cx="186.3781"
-     inkscape:cy="637.55871"
+     inkscape:zoom="0.42886026"
+     inkscape:cx="-143.66649"
+     inkscape:cy="354.98365"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -59,7 +45,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -67,15 +53,26 @@
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
      id="layer1"
-     transform="translate(0,-32.41666)">
-    <rect
-       style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       id="rect4483"
-       width="139.53593"
-       height="139.53593"
-       x="69.545067"
-       y="90.593788"
-       clip-path="url(#clipPath4487)"
-       transform="matrix(-1.5175719,0,0,-1.5175719,343.70921,408.06882)" />
+     transform="translate(0,-32.41665)">
+    <g
+       id="g4494">
+      <rect
+         y="58.874981"
+         x="26.45833"
+         height="211.66667"
+         width="211.66667"
+         id="rect4485"
+         style="opacity:1;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.62062597;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4487"
+         d="M 26.45833,58.874981 238.125,270.54165 V 58.874981 Z"
+         style="fill:none;stroke:#000000;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path4489"
+         d="M 19.914637,53.421903 238.9975,274.90411 V 53.421903 Z"
+         style="fill:#ffffff;stroke:none;stroke-width:0.27534905px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+    </g>
   </g>
 </svg>

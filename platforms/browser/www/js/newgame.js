@@ -4,11 +4,12 @@ const CreateNew = () => {
         e.preventDefault()
         let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
-}
-    if(App.utilobj.review == false){
+    }
+    if(App.utilobj.review === null){
         if(App.utilobj.reviewcount>=1){
+            App.utilobj.review = 1;
+            localStorage.setItem("review",App.utilobj.review)
             Util.askReview()
-            reviewcount = 0;
         }
     }
 }

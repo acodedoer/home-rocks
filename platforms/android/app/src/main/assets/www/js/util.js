@@ -108,7 +108,7 @@ class Util{
         const reviewButton = this.createElement('button','','','Yes')
         const closeButton = this.createElement('button','','','No')
         
-        reviewButton.onclick = () =>{window.open('https://play.google.com');app.removeChild(modal)}
+        reviewButton.onclick = () =>{window.open('https://play.google.com/store/apps/details?id=org.chici.homerocks');app.removeChild(modal)}
         closeButton.onclick = ()=> {app.removeChild(modal)}
         this.appendChildren(div, [message,reviewButton,closeButton])
         div.style.textAlign = "center";

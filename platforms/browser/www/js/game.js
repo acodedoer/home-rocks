@@ -1,5 +1,5 @@
 class Game{
-    constructor(mode, size, playernum, time = 1){
+    constructor(mode, size, playernum, time = 5){
         this.mode = mode;
         this.size = size;
         this.shapes = Util.setShapes(size)
@@ -193,8 +193,6 @@ class Game{
     }
 
     startTimer(size,player){
-        
-        const timeUp = document.querySelector('#time-up')
         let timer = document.createElement('h2')
         let time = this.time * size;
         timer.className = 'heading-two'
@@ -207,10 +205,12 @@ class Game{
                 timer.innerText = `${time}`;
             }
             else{
-                timeUp.play();
+                App.timeup = true;
+                App.audio.pause();
+                App.audio = document.querySelector('#time-up');
+                App.audio.play();
                 clearInterval(counter)
                 player.time = time;
-                App.timeup = true;
                 this.showScore(false)
             }
         }
@@ -270,12 +270,8 @@ class Game{
             scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-                if(App.timeup == false){
-                    if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){
-                        if(count < shapes.length - 1){
-                            App.audio = document.querySelector('#correct-sacn');
-                            App.audio.play()
-                        }
+                if(App.timeup == false){ 
+                    if((shapes.find(item => item.shape == result[0].label) !== undefined) && (found.indexOf(result[0].label) === -1)){             
                         found.push(result[0].label)
                         const id = `shape-${result[0].label}`
                         let shape_found = document.getElementById(id)
@@ -283,10 +279,14 @@ class Game{
                         shape_found.addEventListener("transitionend", ()=> {shape_found.style.display = 'none'});
                         player.score += 1;
                         if(count < shapes.length - 1){
+                            App.audio.pause()
+                            App.audio = document.querySelector('#correct-scan');
+                            App.audio.play()
                             count += 1
                             status.innerText = `${count} of ${shapes.length} snapped`
                         }
                         else{
+                            App.audio.pause()
                             App.audio = document.querySelector('#level-complete');
                             App.audio.play()
                             clearInterval(counter)
@@ -318,8 +318,6 @@ class Game{
         window.plugins.insomnia.keepAwake()
         const app = this.clear()
         let scanning = false;
-        const correctSound = document.querySelector('#correct')
-        const wrongSound = document.querySelector('#wrong')
         let count = 0;
         player.score = 0;
         const [[timer, counter], status] = this.setStatus(shapes.length, player)
@@ -341,12 +339,8 @@ class Game{
             scanning = true;
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snapping...</h2>`
             ClassifyImage().then((result)=>{
-                 if(App.timeup == false){
+                if(App.timeup == false){ 
                     if(shapes[count].shape == result[0].label){
-                        if(count < shapes.length - 1){
-                            App.audio = document.querySelector('#correct-scan');
-                            App.audio.play()
-                        }
                         player.score += 1;
                         const id = `shape-${result[0].label}`
                         const shape_found = document.getElementById(id)
@@ -354,6 +348,8 @@ class Game{
                         shape_found.addEventListener("transitionend", ()=> {
                             shape_found.style.display='none'        
                             if(count < shapes.length - 1){
+                                App.audio = document.querySelector('#correct-scan');
+                                App.audio.play()
                                 count += 1
                                 this.addShapes([shapes[count]], shape_div_random)
                                 status.innerText = `${count} of ${shapes.length} snapped`}
@@ -364,20 +360,19 @@ class Game{
                                 player.time = timer.innerText
                                 this.showScore(true)} 
                             });
-            
                     }
                     else{
                         App.audio = document.querySelector('#wrong-scan');
                         App.audio.play()
                     }
                     scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-                    scan.disabled = false;
-                 }
+                    scanning = false;
+                }
         }).catch((e)=> {
             App.audio = document.querySelector('#wrong-scan');
             App.audio.play()
             scan.innerHTML = `<h2 class='heading-two-no-space'>Snap</h2>`
-            scan.disabled = false;
+            scanning = false;
         })}
     }
 

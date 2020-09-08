@@ -4,16 +4,13 @@ const CreateNew = () => {
         e.preventDefault()
         let game = new Game(GameSettings.selectmode, GameSettings.selectsize, GameSettings.selectplayers)
         game.startGame()
-}
-    console.log(App.utilobj.review)
+    }
     if(App.utilobj.review === null){
-        console.log(App.utilobj.review)
         if(App.utilobj.reviewcount>=1){
             App.utilobj.review = 1;
             localStorage.setItem("review",App.utilobj.review)
             Util.askReview()
         }
-        console.log(App.utilobj.review)
     }
 }
 

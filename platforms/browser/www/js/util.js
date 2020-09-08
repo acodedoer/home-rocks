@@ -104,7 +104,7 @@ class Util{
         const content = this.createElement('div', '', 'modal-content')
         const close = this.createElement('span', '', 'close', '&times')
         const div = document.createElement('div')
-        const message = this.createElement('p', '', 'modal-message', 'Do you want to review this game?')
+        const message = this.createElement('h2', '', 'modal-message', 'Do you want to review this game?')
         const reviewButton = this.createElement('button','','','Yes')
         const closeButton = this.createElement('button','','','No')
         
